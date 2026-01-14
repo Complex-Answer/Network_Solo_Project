@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.Table;
 public class NodeData
 {
     int row, col;
@@ -27,7 +28,8 @@ public class MapGrid : MonoBehaviour
     [SerializeField] float errorValue = 0.5f; //맵 오차 값
 
     private List<NodeData>[] _nodeConnection;
-    private Dictionary<NodeData, int> nodeCount = new();
+    //노드별 생성 개수 체크용
+    private Dictionary<NodeDataSO, int> _nodeCount = new();
     private void Start()
     {
         GridNode();
@@ -132,27 +134,56 @@ public class MapGrid : MonoBehaviour
                 //이제 노드를 생성 시키고 렉트트랜스폼을 가져와서 위치를 지정
                 GameObject node = Instantiate(_nodePerfab, _rectTransform);
                 node.GetComponent<RectTransform>().anchoredPosition = pos;
-
                 Image nodeImage = node.GetComponent<Image>();
-                if (r == _row - 1)
-                {
-                    nodeImage.sprite = _mapData._bossNode._nodeSprite;
-                }
-                if (r == 0)
-                {
-                    nodeImage.sprite = _mapData._startMobNode._nodeSprite;
-                }
-                if (r == _row / 2)
-                {
-                    nodeImage.sprite = _mapData._boxNode._nodeSprite;
-                }
-                else
-                {
 
-                }
+                nodeImage.sprite = RandomNode(r);
 
                 node.name = $"Node_{r}_{nodeData.Col}";
             }
+        }
+    }
+    private Sprite RandomNode(int row)
+    {
+        if (row == _row - 1)
+        {
+            return _mapData._bossNode._nodeSprite;
+        }
+        if (row == 0)
+        {
+            return _mapData._startMobNode._nodeSprite;
+        }
+        if (row == _row / 2)
+        {
+            return _mapData._boxNode._nodeSprite;
+        }
+        else
+        {
+            List<NodeDataSO> availableNodes = _mapData._nodeType.FindAll(
+                n => n._maxCount == -1 || !_nodeCount.ContainsKey(n) || _nodeCount[n] < n._maxCount);
+
+            float totalWeight = 0;
+            foreach (var n in availableNodes)
+            {
+                totalWeight += n._weight;
+            }
+
+            float randomValue = Random.Range(0, totalWeight);
+            float curreuntValue = 0;
+
+            foreach (var n in availableNodes)
+            {
+                curreuntValue += n._weight;
+                if (randomValue < curreuntValue)
+                {
+                    if (_nodeCount.ContainsKey(n))
+                    {
+                        _nodeCount[n]++;
+                    }
+                    return n._nodeSprite;
+
+                }
+            }
+            return _mapData._startMobNode._nodeSprite;
         }
     }
 }

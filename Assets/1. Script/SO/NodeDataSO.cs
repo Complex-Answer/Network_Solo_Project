@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "NodeDataSO", menuName = "Scriptable Objects/MapDataSo")]
+[CreateAssetMenu(fileName = "NodeDataSO", menuName = "Scriptable Objects/NodeDataSO")]
 public class NodeDataSO : ScriptableObject
 {
     public string _nodeName; // 노드 이름
