@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 959258523}
   - component: {fileID: 959258525}
   - component: {fileID: 959258526}
+  - component: {fileID: 959258527}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -601,9 +602,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGrid
   _drawLine: {fileID: 959258526}
+  _creatPath: {fileID: 959258527}
   _nodePerfab: {fileID: 4240275431019451231, guid: c802d106ff09df1418f89d5bba1946e1, type: 3}
   _rectTransform: {fileID: 959258521}
-  _mapData: {fileID: 0}
+  _mapData: {fileID: 11400000, guid: 26fb3f1aad7000f43b5ef06ddccea3c8, type: 2}
   _row: 9
   _col: 8
   errorValue: 0.3
@@ -619,6 +621,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ab9c424f342c745bac04df0efebf5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LineDraw
+--- !u!114 &959258527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959258520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edb8c5c0e096b2e4dbc605951ec9938e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreatPath
 --- !u!1 &1048826221
 GameObject:
   m_ObjectHideFlags: 0

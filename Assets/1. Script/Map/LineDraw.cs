@@ -26,7 +26,7 @@ public class LineDraw : MonoBehaviour
     }
     private void CreatLine(RectTransform rectTransform,Vector2 start, Vector2 end)
     {
-        GameObject line = new("Line", typeof(RectTransform), typeof(Image));
+        GameObject line = new($"Line", typeof(RectTransform), typeof(Image));
         line.transform.SetParent(rectTransform, false);
         line.transform.SetAsFirstSibling();
 

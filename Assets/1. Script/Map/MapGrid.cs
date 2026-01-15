@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI.Table;
 public class NodeData
 {
     int row, col;
@@ -16,8 +15,7 @@ public class NodeData
 public class MapGrid : MonoBehaviour
 {
     [SerializeField] private LineDraw _drawLine;
-
-
+    [SerializeField] private CreatPath _creatPath;
 
     [SerializeField] GameObject _nodePerfab;
     public RectTransform _rectTransform;
@@ -30,13 +28,12 @@ public class MapGrid : MonoBehaviour
     private List<NodeData>[] _nodeConnection;
     //노드별 생성 개수 체크용
     private Dictionary<NodeDataSO, int> _nodeCount = new();
+    //이전 노드 개수 저장용(노드 연속 생성 방지)
+    private Dictionary<NodeDataSO, int> _lastNodeCount = new();
     private void Start()
     {
         GridNode();
     }
-
-   
-
     private void GridNode()
     {
         //맵 만들 때 기존과 겹치치 않게 싹 지워버리기
@@ -48,63 +45,11 @@ public class MapGrid : MonoBehaviour
         _nodeConnection = new List<NodeData>[_row];
         for (int i = 0; i < _row; i++) _nodeConnection[i] = new List<NodeData>();
         //경로를 먼저 만들고
-        CreatPath();
+        _creatPath.PathCreat(_nodeConnection,_row,_col);
         //거기에 노드 이미지를 그리고
         DrawNode();
         //선을 이어주면 완성!
         _drawLine.DrawLine(_rectTransform,_nodeConnection);
-
-    }
-    //경로를 생성하는 메서드
-    private void CreatPath()
-    {
-        //최상단 노드(보스)
-        NodeData boss = new() { Row = _row - 1, Col = _col / 2 };
-        _nodeConnection[_row - 1].Add(boss);
-
-        //보스부터 차례대로 밑으로 값을 내릴거임
-        int bossBranch = Random.Range(2, 4);
-
-        //얘는 보스에서 내려가는 노드
-        for (int i = 0; i < bossBranch; i++)
-        {
-            int childCol = Mathf.Clamp(boss.Col + (i - 1) * 5 + Random.Range(-1, 2), 0, _col - 1);
-            NodeData child = GetOrCreatNode(_row - 2, childCol);
-            boss.DownStairs.Add(child);
-        }
-
-        //보스 바로 밑 노드를 제외한 노드
-        for (int r = _row - 2; r > 0; r--)
-        {
-            foreach (var parents in _nodeConnection[r])
-            {
-                float random = Random.value;
-                int branch = random > 0.65 ? 2 : 1;
-                for (int i = 0; i < branch; i++)
-                {
-                    int move = (i == 0) ? Random.Range(-1, 1) : Random.Range(0, 2);
-                    int childCol = Mathf.Clamp(parents.Col + move, 0, _col - 1);
-
-                    NodeData child = GetOrCreatNode(r - 1, childCol);
-                    if (!parents.DownStairs.Contains(child))
-                    {
-                        parents.DownStairs.Add(child);
-                    }
-                }
-            }
-        }
-    }
-    //만약 노드가 존재하면 노드를 그대로 잇고 아니면 새로운 노드를 생성
-    private NodeData GetOrCreatNode(int row, int col)
-    {
-        NodeData exexisting = _nodeConnection[row].Find(n => n.Col == col);
-        if (exexisting != null)
-        {
-            return exexisting;
-        }
-        NodeData newNode = new() { Row = row, Col = col };
-        _nodeConnection[row].Add(newNode);
-        return newNode;
 
     }
     //경로를 기반으로 노드를 배치
@@ -112,6 +57,10 @@ public class MapGrid : MonoBehaviour
     {
         float cellWidth = _rectTransform.rect.width / _col;
         float cellHeight = _rectTransform.rect.height / _row;
+
+        //맵 새로 만들 때 초기화
+        _nodeCount.Clear();
+        _lastNodeCount.Clear();
         for (int r = 0; r < _row; r++)
         {
 
@@ -134,32 +83,54 @@ public class MapGrid : MonoBehaviour
                 //이제 노드를 생성 시키고 렉트트랜스폼을 가져와서 위치를 지정
                 GameObject node = Instantiate(_nodePerfab, _rectTransform);
                 node.GetComponent<RectTransform>().anchoredPosition = pos;
-                Image nodeImage = node.GetComponent<Image>();
 
-                nodeImage.sprite = RandomNode(r);
+                NodeDataSO selectedNode = RandomNode(r);
+                NodeEvent _mapNode = node.GetComponent<NodeEvent>();
+                if(_mapNode != null)
+                {
+                    _mapNode.Setup(selectedNode,r,nodeData.Col);
+                }
+
+                node.GetComponent<Image>().sprite = selectedNode._nodeSprite;
 
                 node.name = $"Node_{r}_{nodeData.Col}";
             }
         }
     }
-    private Sprite RandomNode(int row)
+    private NodeDataSO RandomNode(int row)
     {
+        //마지막은 무조건 보스
         if (row == _row - 1)
         {
-            return _mapData._bossNode._nodeSprite;
+            return _mapData._bossNode;
         }
+        //첫 시작은 무조건 몹으로 시작함
         if (row == 0)
         {
-            return _mapData._startMobNode._nodeSprite;
+            return _mapData._startMobNode;
         }
         if (row == _row / 2)
         {
-            return _mapData._boxNode._nodeSprite;
+            return _mapData._boxNode;
         }
         else
         {
-            List<NodeDataSO> availableNodes = _mapData._nodeType.FindAll(
-                n => n._maxCount == -1 || !_nodeCount.ContainsKey(n) || _nodeCount[n] < n._maxCount);
+            
+            //가중치 계산
+            List<NodeDataSO> availableNodes = _mapData._nodeType.FindAll(n =>
+            {
+
+                bool maxCount = n._maxCount == -1 || !_nodeCount.ContainsKey(n) || _nodeCount[n] < n._maxCount;
+
+                bool lastNodeCheck = (n._nodeName == "MobNodeSO")||!_lastNodeCount.ContainsKey(n) || (row - _lastNodeCount[n] > 1);
+
+                return maxCount && lastNodeCheck;
+            });
+
+            if (availableNodes.Count == 0)
+            {
+                return _mapData._startMobNode;
+            }
 
             float totalWeight = 0;
             foreach (var n in availableNodes)
@@ -179,11 +150,15 @@ public class MapGrid : MonoBehaviour
                     {
                         _nodeCount[n]++;
                     }
-                    return n._nodeSprite;
-
+                    else
+                    {
+                        _nodeCount[n] = 1;
+                    }
+                    _lastNodeCount[n] = row;
+                    return n;
                 }
             }
-            return _mapData._startMobNode._nodeSprite;
+            return _mapData._startMobNode;
         }
     }
 }
