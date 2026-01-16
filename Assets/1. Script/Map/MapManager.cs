@@ -27,6 +27,7 @@ public class MapManager : MonoBehaviour
             case NodeType.Combat: StartBattle(data._sceneName); break;
             case NodeType.Shop: OpenShop(); break;
             case NodeType.Box: OpenBox(); break;
+            case NodeType.Boss: StartBattle(data._sceneName); break;
         }
     }
     private void StartBattle(string sceneName) => SceneManager.LoadScene(sceneName);
