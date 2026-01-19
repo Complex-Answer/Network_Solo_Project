@@ -5,12 +5,20 @@ public class NodeData
 {
     int row, col;
     Vector2 position;
-    List<NodeData> downstairs = new();
+    List<NodeData> _next = new();
 
-    public int Row { get; set; }
-    public int Col { get; set; }
+
+    public int Row
+    {
+        get { return row; }
+        set { row = value; }
+    }
+    public int Col{
+        get { return col; }
+        set { col = value; }
+    }
     public Vector2 Position { get; set; }
-    public List<NodeData> DownStairs => downstairs;
+    public List<NodeData> NextStairs => _next;
 }
 public class MapGrid : MonoBehaviour
 {
@@ -33,6 +41,15 @@ public class MapGrid : MonoBehaviour
     private void Start()
     {
         GridNode();
+        Invoke(nameof(LastUp), 0.5f);
+    }
+    private void LastUp()
+    {
+        if (MapManager._instance != null)
+        {
+            Debug.Log("매니저에게 UI 갱신을 요청합니다.");
+            MapManager._instance.RefreshMapUI();
+        }
     }
     private void GridNode()
     {
@@ -45,11 +62,11 @@ public class MapGrid : MonoBehaviour
         _nodeConnection = new List<NodeData>[_row];
         for (int i = 0; i < _row; i++) _nodeConnection[i] = new List<NodeData>();
         //경로를 먼저 만들고
-        _creatPath.PathCreat(_nodeConnection,_row,_col);
+        _creatPath.PathCreat(_nodeConnection, _row, _col);
         //거기에 노드 이미지를 그리고
         DrawNode();
         //선을 이어주면 완성!
-        _drawLine.DrawLine(_rectTransform,_nodeConnection);
+        _drawLine.DrawLine(_rectTransform, _nodeConnection);
 
     }
     //경로를 기반으로 노드를 배치
@@ -66,6 +83,7 @@ public class MapGrid : MonoBehaviour
 
             foreach (var nodeData in _nodeConnection[r])
             {
+                nodeData.Row = r;
                 //노드들을 격자 형태로 배치
                 float xPos = nodeData.Col * cellWidth + (cellWidth / 2);
                 float yPos = r * cellHeight + (cellHeight / 2);
@@ -86,14 +104,27 @@ public class MapGrid : MonoBehaviour
 
                 NodeDataSO selectedNode = RandomNode(r);
                 NodeEvent _mapNode = node.GetComponent<NodeEvent>();
-                if(_mapNode != null)
+                if (_mapNode == null)
                 {
-                    _mapNode.Setup(selectedNode,r,nodeData.Col);
+                    Debug.LogError($"[오류] {node.name} 프리팹에 'NodeEvent' 스크립트가 없습니다!");
+                    continue;
+                }
+                if (_mapNode != null)
+                {
+                    MapManager._instance.RegisterNode(nodeData, _mapNode);
+                    _mapNode.Setup(selectedNode, nodeData);
+                }
+                Debug.Log($"[성공] {node.name} 등록 시도");
+
+                Image nodeImage = node.GetComponent<Image>();
+                if (nodeImage != null && selectedNode != null)
+                {
+                    nodeImage.sprite = selectedNode._nodeSprite;
                 }
 
-                node.GetComponent<Image>().sprite = selectedNode._nodeSprite;
-
                 node.name = $"Node_{r}_{nodeData.Col}";
+
+                MapManager._instance.RefreshMapUI();
             }
         }
     }
@@ -115,14 +146,14 @@ public class MapGrid : MonoBehaviour
         }
         else
         {
-            
+
             //가중치 계산
             List<NodeDataSO> availableNodes = _mapData._nodeType.FindAll(n =>
             {
 
                 bool maxCount = n._maxCount == -1 || !_nodeCount.ContainsKey(n) || _nodeCount[n] < n._maxCount;
 
-                bool lastNodeCheck = (n._nodeName == "MobNodeSO")||!_lastNodeCount.ContainsKey(n) || (row - _lastNodeCount[n] > 1);
+                bool lastNodeCheck = (n._nodeName == "MobNodeSO") || !_lastNodeCount.ContainsKey(n) || (row - _lastNodeCount[n] > 1);
 
                 return maxCount && lastNodeCheck;
             });

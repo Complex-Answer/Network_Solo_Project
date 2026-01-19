@@ -9,6 +9,7 @@ public class PlayerAttack : MonoBehaviour
     InputAction _input;
 
     bool _timer = false;
+    int _lastIndex = -1; //밑에서 저장할 인덱스 저장용
     float _attSpeed = 0;
     float _delayTime = 0.3f;
     void Awake()
@@ -30,7 +31,7 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext ctx)
     {
-        if (!ctx.performed)
+        if (!ctx.performed || _timer)
         {
             return;
         }
@@ -42,11 +43,17 @@ public class PlayerAttack : MonoBehaviour
         {
             Debug.Log(_timer);
         }
+        int currentIndex = Random.Range(0, 2);
 
-        if (_timer)
+        if(currentIndex == _lastIndex)
         {
-            return;
+            currentIndex = (currentIndex == 0) ? 1 : 0; //현재 인덱스가 0이면 1로 변경
         }
+        _lastIndex = currentIndex; //마지막 인덱스를 저장
+
+        string attackName = (currentIndex == 0) ? "Attack01" : "Attack02"; //이제 어택01이랑 어택02를 골라줌
+        _player.Animator.CrossFade(attackName, 0.1f, 1);
+     
         _timer = true;
         //_isAttacking = true; //공격 트리거용 변수
         Debug.Log("공격");

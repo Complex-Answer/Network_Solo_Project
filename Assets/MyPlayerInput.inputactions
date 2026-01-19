@@ -1,6 +1,6 @@
 {
     "version": 1,
-    "name": "InputSystem_Actions",
+    "name": "MyPlayerInput",
     "maps": [
         {
             "name": "Player",
@@ -965,6 +965,34 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Map",
+            "id": "b2432871-f1ca-4e02-b2d7-7be6fd1e903c",
+            "actions": [
+                {
+                    "name": "Map",
+                    "type": "Button",
+                    "id": "8ce387be-c980-4857-a8f8-18bcfeab13ed",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "47903085-4feb-4ccb-b625-d754c31d432e",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Map",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

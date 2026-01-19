@@ -17,7 +17,7 @@ public class LineDraw : MonoBehaviour
         {
             foreach (var parent in layer)
             {
-                foreach (var child in parent.DownStairs)
+                foreach (var child in parent.NextStairs)
                 {
                     CreatLine(_rectTransform,parent.Position, child.Position);
                 }

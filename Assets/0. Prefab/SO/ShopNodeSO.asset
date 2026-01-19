@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NodeDataSO
   _nodeName: Shop
   _nodeSprite: {fileID: 21300000, guid: 35c7e5df79d81ee47b36a7da49dfb2c0, type: 3}
-  _iconColor:
-    r: 1
-    g: 1
-    b: 1
-    a: 1
+  _nodeType: 0
+  _sceneName: PlayerTest
+  _iconColor: {r: 1, g: 1, b: 1, a: 1}
   _weight: 10
   _maxCount: 5

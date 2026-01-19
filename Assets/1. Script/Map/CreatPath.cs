@@ -18,7 +18,10 @@ public class CreatPath : MonoBehaviour
         {
             int childCol = Mathf.Clamp(boss.Col + (i - 1) * 4 + Random.Range(-1, 2), 0, _col - 1);
             NodeData child = GetOrCreatNode(_nodeConnection, _row - 2, childCol);
-            boss.DownStairs.Add(child);
+            if (!child.NextStairs.Contains(boss))
+            {
+                child.NextStairs.Add(boss);
+            }
         }
 
         //보스 바로 밑 노드를 제외한 노드
@@ -34,9 +37,9 @@ public class CreatPath : MonoBehaviour
                     int childCol = Mathf.Clamp(parents.Col + move, 0, _col - 1);
 
                     NodeData child = GetOrCreatNode(_nodeConnection, r - 1, childCol);
-                    if (!parents.DownStairs.Contains(child))
+                    if (!child.NextStairs.Contains(parents))
                     {
-                        parents.DownStairs.Add(child);
+                        child.NextStairs.Add(parents);
                     }
                 }
             }
