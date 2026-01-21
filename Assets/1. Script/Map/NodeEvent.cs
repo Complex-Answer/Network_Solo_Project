@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,31 +9,38 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
     private NodeData _mapNode;
     private int _row, _col;
     private bool _isSelectable = false;
+    private bool _isVisited = false;
 
     [SerializeField] private GameObject _frame;
     private Image _nodeImage;
 
+    public NodeData MapNode => _mapNode; //내가 가지고 있는 노드를 뿌리기
     private void Awake()
     {
         _nodeImage = GetComponent<Image>();
     }
 
-    public void SetCurrentNode()
+    public void SetCurrentNode() //지금 현재 있는 곳 테두리 치기
     {
         if(_frame != null)
         {
             _frame.SetActive(true);
         }
     }
-    public void SetVisitedNode()
+    public void SetVisitedNode() //방문한거 색 바꾸기
     {
-        if(_frame!= null)
+        _isVisited = true;
+        HideFrame();
+        if (_nodeImage != null)
+        {
+            _nodeImage.color = Color.darkCyan;
+        }
+    }
+    public void HideFrame()
+    {
+        if (_frame != null)
         {
             _frame.SetActive(false);
-        }
-        if(_nodeImage != null)
-        {
-            _nodeImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);
         }
     }
     public void Setup(NodeDataSO data, NodeData mapData)
@@ -44,12 +52,20 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("클릭 감지됨");
 
         if(!_isSelectable)
         {
             Debug.Log("이 노드는 선택할 수 없습니다.");
             return;
         }
+        if (!MapManager._instance.CanMove)
+        {
+            Debug.LogWarning("전투 중에는 이동할 수 없습니다!");
+            return;
+        }
+       
+        //if (!PhotonNetwork.IsMasterClient) return;
         MapManager._instance.CurrentRow = _row;
         MapManager._instance.CurrentCol = _col;
 
@@ -73,8 +89,15 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
     }
     public void SelectableNode(bool select)
     {
+        if(_isVisited)
+        {
+            _frame.SetActive(false);
+            return;
+        }
         _isSelectable = select;
-        _nodeImage.color = select ? Color.white : new Color(0.3f, 0.3f, 0.3f, 0.8f);
+        _nodeImage.color = select ? Color.white : new Color(0f, 0f, 0f, 0.8f);
+
+
         _nodeImage.raycastTarget = select;
     }
 }

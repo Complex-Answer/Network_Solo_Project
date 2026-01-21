@@ -102,8 +102,8 @@ public class MapGrid : MonoBehaviour
                 GameObject node = Instantiate(_nodePerfab, _rectTransform);
                 node.GetComponent<RectTransform>().anchoredPosition = pos;
 
-                NodeDataSO selectedNode = RandomNode(r);
                 NodeEvent _mapNode = node.GetComponent<NodeEvent>();
+                NodeDataSO selectedNode = RandomNode(r);
                 if (_mapNode == null)
                 {
                     Debug.LogError($"[오류] {node.name} 프리팹에 'NodeEvent' 스크립트가 없습니다!");
@@ -111,8 +111,8 @@ public class MapGrid : MonoBehaviour
                 }
                 if (_mapNode != null)
                 {
-                    MapManager._instance.RegisterNode(nodeData, _mapNode);
                     _mapNode.Setup(selectedNode, nodeData);
+                    MapManager._instance.RegisterNode(nodeData, _mapNode);
                 }
                 Debug.Log($"[성공] {node.name} 등록 시도");
 

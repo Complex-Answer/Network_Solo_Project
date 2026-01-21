@@ -15994,8 +15994,12 @@ GameObject:
   - component: {fileID: 4469863407825143671}
   - component: {fileID: 8038611775785392982}
   - component: {fileID: 2966310895620020902}
+  - component: {fileID: 3876484211844975285}
   - component: {fileID: 202005871052128032}
   - component: {fileID: 29913678149198997}
+  - component: {fileID: 6280931416545115445}
+  - component: {fileID: 1991511413741958487}
+  - component: {fileID: 6351873580942353218}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -16132,10 +16136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30f8b80e3ef36c4a970b82f5d682dee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerManager
-  _maxHp: 100
-  _moveSpeed: 5
-  _attack: 5
-  _attackSpeed: 1
 --- !u!114 &2966310895620020902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16148,6 +16148,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78bb655e153e054580c0d2e486a8cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+--- !u!114 &3876484211844975285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1be0214cb21b4be41bdb731713348f68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteract
+  _interactRange: 2
+  _interactLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!54 &202005871052128032
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -16198,6 +16214,72 @@ CapsuleCollider:
   m_Height: 1.7887675
   m_Direction: 1
   m_Center: {x: 0, y: 0.84625834, z: 0}
+--- !u!114 &6280931416545115445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 1991511413741958487}
+  - {fileID: 6351873580942353218}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &1991511413741958487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
+--- !u!114 &6351873580942353218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonAnimatorView
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 2
+    Name: DirX
+  - Type: 1
+    SynchronizeType: 2
+    Name: DirY
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
+  - SynchronizeType: 1
+    LayerIndex: 1
 --- !u!1 &6240213283493101912
 GameObject:
   m_ObjectHideFlags: 0

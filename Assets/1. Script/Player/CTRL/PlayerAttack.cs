@@ -1,72 +1,60 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviourPun
 {
     PlayerManager _player;
-    InputAction _input;
 
-    bool _timer = false;
+    bool _isAttack = false;
     int _lastIndex = -1; //밑에서 저장할 인덱스 저장용
     float _attSpeed = 0;
-    float _delayTime = 0.3f;
+
     void Awake()
     {
         _player = GetComponent<PlayerManager>();
-        _input = InputSystem.actions["Attack"];
     }
-    private void Start()
+   
+    public void OnAttack()
     {
-        _attSpeed = _player.AttackSpeed/1.1f;
-        _input.performed += OnAttack;
-        _input.canceled += ctx => //입력 뗄 때
-        {
-            //_isAttacking = false;
-            //isUse = false;
-        };
-
-    }
-
-    private void OnAttack(InputAction.CallbackContext ctx)
-    {
-        if (!ctx.performed || _timer)
+        if (!_player.photonView.IsMine)
         {
             return;
         }
-        //if (EventSystem.current.IsPointerOverGameObject())
-        //{
-        //    return;
-        //}
-        if (!_timer)
+        if ( _isAttack) //중복 실행 불가
         {
-            Debug.Log(_timer);
+            return;
         }
+
         int currentIndex = Random.Range(0, 2);
 
-        if(currentIndex == _lastIndex)
+        if (currentIndex == _lastIndex)
         {
             currentIndex = (currentIndex == 0) ? 1 : 0; //현재 인덱스가 0이면 1로 변경
         }
         _lastIndex = currentIndex; //마지막 인덱스를 저장
 
-        string attackName = (currentIndex == 0) ? "Attack01" : "Attack02"; //이제 어택01이랑 어택02를 골라줌
-        _player.Animator.CrossFade(attackName, 0.1f, 1);
-     
-        _timer = true;
-        //_isAttacking = true; //공격 트리거용 변수
-        Debug.Log("공격");
         StartCoroutine(AttackSpeed()); //공격속도 딜레이
+        _player.photonView.RPC("RPC_Attack", RpcTarget.All, currentIndex); //위에서 랜덤으로 지정된 인덱스들을 RPC로 쏴주기
+    }
+
+    [PunRPC]
+    private void RPC_Attack(int index)
+    {
+        _isAttack = true;
+
+        string attackName = (index == 0) ? "Attack01" : "Attack02"; //이제 어택01이랑 어택02를 골라줌
+        _player.Animator.CrossFade(attackName, 0.1f, 1);
+
+        //_isAttacking = true; //공격 트리거용 변수
     }
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
-        yield return new WaitForSeconds(_attSpeed);
-        _timer = false;
-    }
+        _attSpeed = 1f / Mathf.Max(0.1f, _player.AttackSpeed); //최대 공격속도 지정해주기
 
-    private void OnDestroy()
-    {
-        _input.performed -= OnAttack;
+        yield return new WaitForSeconds(_attSpeed);
+        _isAttack = false;
     }
 }

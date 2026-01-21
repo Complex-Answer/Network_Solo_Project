@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Windows;
 
 public class MoveState : IState
 {
@@ -25,8 +24,6 @@ public class MoveState : IState
         _player.Animator.SetFloat("DirX", _player.PlayerMove.Move.x, 0.1f, Time.deltaTime);
         _player.Animator.SetFloat("DirY", _player.PlayerMove.Move.y, 0.1f,Time.deltaTime);
 
-        Debug.Log(_player.PlayerMove.Move.x);
-        Debug.Log( _player.PlayerMove.Move.y);
         if (_player.PlayerDash.IsDash)
         {
             _player.MoveState(new DashState(_player));

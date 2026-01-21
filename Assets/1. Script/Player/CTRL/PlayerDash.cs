@@ -1,11 +1,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerDash : MonoBehaviour
 {
-    InputAction _input;
     PlayerManager _player;
 
     [SerializeField] private float _dashForce = 50; //´ë½¬ Èû
@@ -24,23 +22,16 @@ public class PlayerDash : MonoBehaviour
     private void Awake()
     {
         _player = GetComponent<PlayerManager>();
-
-        _input = InputSystem.actions["Dash"];
     }
 
     void Start()
     {
-        
-
         DashDelay = new WaitForSeconds(_dashDelay);
         DashTime = new WaitForSeconds(_dashTime);
-
-        _input.performed += OnDash;
     }
 
-    private void OnDash(InputAction.CallbackContext ctx)
+    public void OnDash()
     {
-        Debug.Log(ctx.phase);
         if (_canDash)
         {
             return;
@@ -49,12 +40,10 @@ public class PlayerDash : MonoBehaviour
         //{
         //    return;
         //}
-        if (ctx.performed && ctx.ReadValue<float>() > 0.1f)
+
+        if (_player.PlayerMove.Move != Vector3.zero)
         {
-            if (_player.PlayerMove.Move != Vector3.zero)
-            {
-                StartCoroutine(Dash());
-            }
+            StartCoroutine(Dash());
         }
     }
     IEnumerator Dash()
