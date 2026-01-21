@@ -10,6 +10,7 @@ using Photon.Pun;
 /// </summary>
 public class MapManager : MonoBehaviour
 {
+    #region 필드
     private MyPlayerInput _inputActions;
     static public MapManager _instance;
     private Dictionary<NodeData, NodeEvent> _nodeEvents = new();
@@ -19,30 +20,23 @@ public class MapManager : MonoBehaviour
 
     private List<Vector2> _visitedNodes = new();
 
-    private int _currentRow = -1;
+    private int _currentRow = -1; //-1은 시작 하지않은 위치
     private int _currentCol = -1;
 
-    public int CurrentRow { get { return _currentRow; } set { _currentRow = value; } } //-1은 시작 하지않은 위치
+    public int CurrentRow { get { return _currentRow; } set { _currentRow = value; } } 
     public int CurrentCol { get { return _currentCol; } set { _currentCol = value; } }
     public bool CanMove { get; set; } = true; //전투인지 확인하는 불 값 프로퍼티
+    public List<NodeData>[] SavedMapData { get; set; }
+    #endregion
     private void Awake()
     {
         _inputActions = new MyPlayerInput();
-        if (_instance == null) //싱글톤 패턴
+        
+        PhotonNetwork.AutomaticallySyncScene = true;
+        if (SceneManager.GetActiveScene().name == "Floor")
         {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-
-            PhotonNetwork.AutomaticallySyncScene = true;
-            if (SceneManager.GetActiveScene().name == "Floor")
-            {
-                CanMove = true;
-                Debug.Log("MapManager: 맵 씬으로 시작됨. CanMove 활성화.");
-            }
-        }
-        else
-        {
-            Destroy(gameObject);
+            CanMove = true;
+            Debug.Log("MapManager: 맵 씬으로 시작됨. CanMove 활성화.");
         }
     }
    
@@ -62,6 +56,7 @@ public class MapManager : MonoBehaviour
 
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+    //그냥 맵 껐다 켜주는 거
     private void ToggleMap(InputAction.CallbackContext ctx)
     {
         if (_mapUI == null) return;
@@ -73,25 +68,31 @@ public class MapManager : MonoBehaviour
             RefreshMapUI();
         }
     }
+    //딕셔너리에 연결 시켜주는 친구
     public void RegisterNode(NodeData data, NodeEvent nodeEvent)
     {
         _nodeEvents[data] = nodeEvent;
     }
+    //맵 초기화
     public void ClearMap() => _nodeEvents.Clear();
+    //
     public void SetNextNode(List<NodeData> nextNode)
     {
         _nextNodes = nextNode;
         foreach (var nodes in _nodeEvents.Values)
         {
-            nodes.SelectableNode(false);
+            if (nodes != null && nodes.gameObject != null)
+            {
+                nodes.SelectableNode(false);
+            }
         }
     }
 
-    public List<NodeData> GetNextNode()
-    {
-        return _nextNodes;
-    }
-    public void RefreshMapUI() //얘는 노드 갱신중
+    //public List<NodeData> GetNextNode()
+    //{
+    //    return _nextNodes;
+    //}
+    public void RefreshMapUI() //얘는 노드 갱신용
     {
         if (_mapUI == null) return;
 
@@ -116,19 +117,28 @@ public class MapManager : MonoBehaviour
                     count++;
                 }
             }
-            Debug.Log($"[성공] 0층 노드 {count}개를 활성화했습니다.");
+            Debug.Log($"0층 노드 {count}개를 활성화");
         }
         else if (_nextNodes != null)
         {
             foreach (var data in _nextNodes)
             {
-                if (_nodeEvents.TryGetValue(data, out NodeEvent ev))
+                //if (_nodeEvents.TryGetValue(data, out NodeEvent ev))
+                //{
+                //    ev.SelectableNode(true); //이제 한칸 씩 전진할 수 있는 노드를 활성화
+                //    Debug.Log(data.Row + "현재 층");
+                //}
+                foreach (var kvp in _nodeEvents)
                 {
-                    ev.SelectableNode(true); //이제 한칸 씩 전진할 수 있는 노드를 활성화
+                    if (kvp.Key.Row == data.Row && kvp.Key.Col == data.Col)
+                    {
+                        kvp.Value.SelectableNode(true);
+                    }
                 }
             }
         }
     }
+    //맵 재 실행시 (또는 맵 로드시)
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name == "Floor")
@@ -199,7 +209,8 @@ public class MapManager : MonoBehaviour
         if (!string.IsNullOrEmpty(data._sceneName))
         {
             Debug.Log($"[맵매니저] 노드 이벤트 실행: {data._nodeName}, 씬 로드: {data._sceneName}");
-            PhotonNetwork.LoadLevel(data._sceneName);
+            SceneManager.LoadScene(data._sceneName);
+            //PhotonNetwork.LoadLevel(data._sceneName);
         }
         else
         {

@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//경로를 기억시킨다
+//어느 씬에 있던지 매니저에 접근해서 매니저의 정보를 받아오고 그 정보로 맵을 그린다
 public class CreatPath : MonoBehaviour
 {
     //경로를 생성하는 메서드
@@ -9,7 +11,6 @@ public class CreatPath : MonoBehaviour
         //최상단 노드(보스)
         NodeData boss = new() { Row = _row - 1, Col = _col / 2 };
         _nodeConnection[_row - 1].Add(boss);
-
         //보스부터 차례대로 밑으로 값을 내릴거임
         int bossBranch = Random.Range(2, 4);
 
