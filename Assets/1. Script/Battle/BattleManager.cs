@@ -48,7 +48,6 @@ public class BattleManager : MonoBehaviourPunCallbacks
         if (MapManager._instance != null)
         {
             MapManager._instance.CanMove = true;
-            MapManager._instance.RefreshMapUI();
         }
 
         SceneManager.LoadScene("Floor");

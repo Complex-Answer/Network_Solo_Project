@@ -19,12 +19,28 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
     {
         _nodeImage = GetComponent<Image>();
     }
+    public void Setup(NodeDataSO data, NodeData mapData)
+    {
+        _nodeData = data;
+        _mapNode = mapData;
+        _row = mapData.Row;
+        _col = mapData.Col;
+
+        if (_nodeImage != null && _nodeData != null)
+        {
+            _nodeImage.sprite = _nodeData._nodeSprite;
+        }
+    }
 
     public void SetCurrentNode() //지금 현재 있는 곳 테두리 치기
     {
         if(_frame != null)
         {
             _frame.SetActive(true);
+        }
+        if (_nodeImage != null)
+        {
+            _nodeImage.color = Color.white;
         }
     }
     public void SetVisitedNode() //방문한거 색 바꾸기
@@ -36,20 +52,7 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
             _nodeImage.color = Color.darkCyan;
         }
     }
-    public void HideFrame()
-    {
-        if (_frame != null)
-        {
-            _frame.SetActive(false);
-        }
-    }
-    public void Setup(NodeDataSO data, NodeData mapData)
-    {
-        _nodeData = data;
-        _mapNode = mapData;
-        _row = mapData.Row;
-        _col = mapData.Col;
-    }
+    public void HideFrame() => _frame?.SetActive(false);
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log("클릭 감지됨");
@@ -66,20 +69,14 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
         }
        
         //if (!PhotonNetwork.IsMasterClient) return;
-        MapManager._instance.CurrentRow = _row;
-        MapManager._instance.CurrentCol = _col;
+        //MapManager._instance.CurrentRow = _row;
+        //MapManager._instance.CurrentCol = _col;
 
 
         Debug.Log($"노드 클릭: {_nodeData._nodeName} at ({_row}, {_col})");
 
         SetCurrentNode();
         Debug.Log($"{gameObject.name}의 프레임 활성화 상태: {_frame.activeSelf}");
-
-        if (_mapNode != null && _mapNode.NextStairs != null)
-        {
-            // 매니저에 이 리스트를 보관하는 함수가 필요함
-            MapManager._instance.SetNextNode(_mapNode.NextStairs);
-        }
 
         GetComponent<Image>().sprite = _nodeData._nodeSprite;
         if (_nodeData != null)
@@ -95,9 +92,10 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
             return;
         }
         _isSelectable = select;
-        _nodeImage.color = select ? Color.white : new Color(0f, 0f, 0f, 0.8f);
-
-
-        _nodeImage.raycastTarget = select;
+        if (_nodeImage != null)
+        {
+            _nodeImage.color = select ? Color.white : new Color(0.2f, 0.2f, 0.2f, 0.8f);
+            _nodeImage.raycastTarget = select; // 선택 불가능하면 클릭 방지
+        }
     }
 }

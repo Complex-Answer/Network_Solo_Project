@@ -37,7 +37,8 @@ public class PlayerAttack : MonoBehaviourPun
         _lastIndex = currentIndex; //마지막 인덱스를 저장
 
         StartCoroutine(AttackSpeed()); //공격속도 딜레이
-        _player.photonView.RPC("RPC_Attack", RpcTarget.All, currentIndex); //위에서 랜덤으로 지정된 인덱스들을 RPC로 쏴주기
+        //_player.photonView.RPC("RPC_Attack", RpcTarget.All, currentIndex); //위에서 랜덤으로 지정된 인덱스들을 RPC로 쏴주기
+        RPC_Attack(currentIndex); //잠시 네트워크 안쓸 때 테스트용
     }
 
     [PunRPC]

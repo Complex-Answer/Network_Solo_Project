@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class LineDraw : MonoBehaviour
 {
+    [SerializeField] private float _drawLine = 5;
     public void DrawLine(RectTransform _rectTransform, List<NodeData>[] nodeConnection)
     {
         foreach (Transform child in _rectTransform)
@@ -19,12 +20,12 @@ public class LineDraw : MonoBehaviour
             {
                 foreach (var child in parent.NextStairs)
                 {
-                    CreatLine(_rectTransform,parent.Position, child.Position);
+                    CreatLine(_rectTransform, parent.Position, child.Position);
                 }
             }
         }
     }
-    private void CreatLine(RectTransform rectTransform,Vector2 start, Vector2 end)
+    private void CreatLine(RectTransform rectTransform, Vector2 start, Vector2 end)
     {
         GameObject line = new($"Line", typeof(RectTransform), typeof(Image));
         line.transform.SetParent(rectTransform, false);
@@ -37,7 +38,7 @@ public class LineDraw : MonoBehaviour
         Vector2 dir = end - start;
         float distance = dir.magnitude;
 
-        rect.sizeDelta = new Vector2(distance, 3f);
+        rect.sizeDelta = new Vector2(distance, _drawLine);
         rect.pivot = new Vector2(0, 0.5f);
         rect.anchoredPosition = start;
 
