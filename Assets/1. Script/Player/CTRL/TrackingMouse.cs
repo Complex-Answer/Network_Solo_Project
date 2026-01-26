@@ -4,7 +4,6 @@ using UnityEngine.InputSystem;
 public class TrackingMouse : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 10f;
-    [SerializeField] private LayerMask groundLayer;
 
     void Update()
     {
@@ -16,19 +15,19 @@ public class TrackingMouse : MonoBehaviour
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mouseScreenPos);
 
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit,Mathf.Infinity, groundLayer))
+        Plane groundPlane = new Plane(Vector3.up, transform.position);
+
+        if (groundPlane.Raycast(ray, out float enter))
         {
-            Vector3 targetPosition = hit.point;
-            targetPosition.y = transform.position.y;
+            Vector3 hitPoint = ray.GetPoint(enter);
 
-            Vector3 dir = (targetPosition - transform.position).normalized;
+            Vector3 dir = hitPoint - transform.position;
+            dir.y = 0; // 캐릭터가 위아래로 꺾이지 않게 고정
 
-            if (dir != Vector3.zero)
+            if (dir.sqrMagnitude > 0.1f)
             {
                 Quaternion targetRotation = Quaternion.LookRotation(dir);
-                transform.rotation  = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed*Time.deltaTime);
-                 Debug.DrawRay(transform.position, dir * 5f, Color.red);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
     }
