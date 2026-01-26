@@ -15994,6 +15994,7 @@ GameObject:
   - component: {fileID: 4469863407825143671}
   - component: {fileID: 8038611775785392982}
   - component: {fileID: 2966310895620020902}
+  - component: {fileID: 6643298316824088540}
   - component: {fileID: 3876484211844975285}
   - component: {fileID: 202005871052128032}
   - component: {fileID: 29913678149198997}
@@ -16148,6 +16149,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78bb655e153e054580c0d2e486a8cc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
+--- !u!114 &6643298316824088540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83fca97fe5043bd438db88ada2365501, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrackingMouse
+  rotationSpeed: 5
 --- !u!114 &3876484211844975285
 MonoBehaviour:
   m_ObjectHideFlags: 0
