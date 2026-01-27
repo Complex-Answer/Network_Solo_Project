@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,16 +10,35 @@ public class BattleManager : MonoBehaviourPunCallbacks
 
     public bool IsBattle { get; private set; } = false;
 
-
+    private List<BasicMonster> _aliveMonsters = new();
     private void Awake()
     {
         _instance = this;
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
     private void Start()
     {
         if(MapManager._instance != null)
         {
             MapManager._instance.CanMove = false;
+        }
+    }
+    public void RegisterMonster(BasicMonster monster)
+    {
+        if (PhotonNetwork.IsMasterClient) _aliveMonsters.Add(monster);
+    }
+
+    // ¸÷ÀÌ Á×À» ¶§ È£Ãâ
+    public void RemoveMonster(BasicMonster monster)
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        _aliveMonsters.Remove(monster);
+
+        // ¸÷ÀÌ ´Ù Á×¾úÀ¸¸é ½Â¸® Ã³¸®
+        if (_aliveMonsters.Count <= 0)
+        {
+            WinBattle();
         }
     }
 
@@ -51,6 +71,7 @@ public class BattleManager : MonoBehaviourPunCallbacks
         }
 
         SceneManager.LoadScene("Floor");
+        //PhotonNetwork.LoadLevel("Floor");
         // ÀÌ±â°í ÀüÅõ º¸»ó È¹µæ
     }
 

@@ -1,7 +1,12 @@
 using UnityEngine;
 
-public class M_DieState : M_IState
+public class MChaseState : IMState
 {
+    BasicMonster _mob;
+    public MChaseState(BasicMonster mob)
+    {
+        _mob = mob;
+    }
     public void Enter()
     {
         
@@ -9,8 +14,9 @@ public class M_DieState : M_IState
 
     public void Exit()
     {
-        
+
     }
+       
 
     public void Update()
     {

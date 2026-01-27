@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface M_IState
+public interface IMState
 {
     void Enter();
     void Exit();

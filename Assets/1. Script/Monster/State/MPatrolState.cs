@@ -1,7 +1,12 @@
 using UnityEngine;
 
-public class M_AttackState : M_IState
+public class MPatrolState : IMState
 {
+    BasicMonster _mob;
+    public MPatrolState(BasicMonster mob)
+    {
+        _mob = mob;
+    }
     public void Enter()
     {
         
@@ -9,7 +14,7 @@ public class M_AttackState : M_IState
 
     public void Exit()
     {
-        
+
     }
 
     public void Update()

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class M_ChaseState : M_IState
+public class MAttackState : IMState
 {
     public void Enter()
     {
@@ -9,9 +9,8 @@ public class M_ChaseState : M_IState
 
     public void Exit()
     {
-
+        
     }
-       
 
     public void Update()
     {
