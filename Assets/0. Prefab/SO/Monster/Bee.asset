@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39b1549c901d2b844b02912510622d2a, type: 3}
+  m_Name: Bee
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterSO
+  _enemyName: Bee
+  _maxHp: 25
+  _attackDamage: 6
+  _moveSpeed: 10
+  _enemyModelPrefab: {fileID: 2143841332175290298, guid: e470210efd1fa634aa36309e15e66378, type: 3}
+  _attackRange: 4

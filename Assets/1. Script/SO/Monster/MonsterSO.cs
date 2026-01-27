@@ -8,5 +8,5 @@ public class MonsterSO : ScriptableObject
     public int _attackDamage;
     public int _moveSpeed;
     public GameObject _enemyModelPrefab; 
-    //public float attackRange;
+    public float _attackRange;
 }
