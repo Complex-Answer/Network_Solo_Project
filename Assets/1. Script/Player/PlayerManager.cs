@@ -11,10 +11,6 @@ public class PlayerManager : MonoBehaviourPun
 
     //이 밑에 있는 값들은 나중에 게임 매니저에서 가져올 것들
     [Header("플레이어 스탯")]
-    private float _maxHp;
-    private float _moveSpeed;
-    private float _attack;
-    private float _attackSpeed;
     private float _hp;
     private int _gold;
 
@@ -36,10 +32,10 @@ public class PlayerManager : MonoBehaviourPun
     [Header("프로퍼티")]
     private IState _state;
     public float Hp => _hp;
-    public float MaxHp => _maxHp;
-    public float MoveSpeed => _moveSpeed;
-    public float Attack => _attack;
-    public float AttackSpeed => _attackSpeed;
+    public float MaxHp { get; private set; }
+    public float MoveSpeed { get; private set; }
+    public float Attack { get; private set; }
+    public float AttackSpeed { get; private set; }
     public int Gold => _gold;
     public PlayerMove PlayerMove => _playerMove;
     public PlayerAttack PlayerAttack => _playerAttack;
@@ -66,41 +62,77 @@ public class PlayerManager : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            if (GameManager._instance != null)
-            {
-                _hp = GameManager._instance.Hp;
-                _maxHp = GameManager._instance.MaxHp;
-                _moveSpeed = GameManager._instance.MoveSpeed;
-                _attack = GameManager._instance.Attack;
-                _attackSpeed = GameManager._instance.AttackSpeed;
-                _gold = GameManager._instance.Gold;
-            }
-
+            LoadStatsFromManager();
         }
         else
         {
+            if (GameManager._instance != null)
+            {
+                MaxHp = GameManager._instance.MaxHp;
+                _hp = MaxHp; // 일단 풀피로 설정 (이후 동기화)
+                OnHpChanged?.Invoke(_hp, MaxHp);
+            }
+        }
 
+        if (BattleManager._instance != null)
+        {
+            BattleManager._instance.RegisterPlayer(this.transform);
         }
 
         MoveState(new MoveState(this));
     }
-    public void OnHealthChanged() //바뀔때 마다 알려주는 이벤트 함수
+    private void LoadStatsFromManager()
     {
-        if (GameManager._instance != null)
+        var gm = GameManager._instance;
+        if (gm == null)
         {
-            GameManager._instance._currentHp = _hp;
+            return;
         }
+        _hp = gm.Hp;
+        _gold = gm.Gold;
+        MaxHp = gm.MaxHp;
+        MoveSpeed = gm.MoveSpeed;
+        Attack = gm.Attack;
+        AttackSpeed = gm.AttackSpeed;
+
+        OnHpChanged?.Invoke(_hp, MaxHp);
+
+    }
+    public void SaveToManager()
+    {
+        if (!photonView.IsMine || GameManager._instance == null)
+        {
+            return;
+        }
+        GameManager._instance.SavePlayerStats(_hp, _gold);
     }
     public void TakeDamage(float damaged)
     {
         if (photonView.IsMine)
         {
-            _hp -= damaged;
-            OnHealthChanged();
+            ProcessDamage(damaged);
 
-            if (_hp <= 0)
+            photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.Others, damaged);
+        }
+    }
+    [PunRPC]
+    private void RPC_TakeDamage(float damaged)
+    {
+        ProcessDamage(damaged);
+    }
+
+    private void ProcessDamage(float damaged)
+    {
+        _hp -= damaged;
+        _hp = Mathf.Clamp(_hp, 0, MaxHp);
+
+        OnHpChanged?.Invoke(_hp, MaxHp);
+
+        if (_hp <= 0)
+        {
+            _hp = 0;
+            if(_state is not DieState)
             {
-                _hp = 0;
                 //죽는 처리
                 MoveState(new DieState(this));
             }
@@ -120,7 +152,7 @@ public class PlayerManager : MonoBehaviourPun
         {
             _playerDash.OnDash();
         }
-        if (_attackAction.IsPressed()) 
+        if (_attackAction.IsPressed())
         {
             _playerAttack.OnAttack();
         }
@@ -131,12 +163,17 @@ public class PlayerManager : MonoBehaviourPun
 
         _state?.Update();
     }
-
     public void MoveState(IState state)
     {
         _state?.Exit();
         _state = state;
         _state.Enter();
     }
-
+    private void OnDestroy()
+    {
+        if (BattleManager._instance != null)
+        {
+            BattleManager._instance.RemovePlayer(this.transform);
+        }
+    }
 }

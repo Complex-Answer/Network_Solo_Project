@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
         _currentHp = hp;
         _gold = gold;
     }
+   
     public void EndBattle(bool playerWon)
     {
         if (_isEndBattle)
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviour
         {
             case "MaxHp":
                 _maxHp += amount;
-                _currentHp += amount; //최대 체력 증가시 현재 체력도 같이 증가
+                _currentHp = Mathf.Min(_currentHp + amount, _maxHp); //최대 체력 증가시 현재 체력도 같이 증가
                 break;
             case "MoveSpeed":
                 _moveSpeed += amount;

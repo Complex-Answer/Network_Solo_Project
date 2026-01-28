@@ -27,13 +27,11 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
             if (_mobData._enemyModelPrefab != null)
             {
                 GameObject model = Instantiate(_mobData._enemyModelPrefab, transform);
-                model.transform.localPosition = Vector3.zero;
-                model.transform.localRotation = Quaternion.identity;
-
+                model.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
                 _animator = model.GetComponent<Animator>();
             }
 
-
+            //초기 스탯
             _currentHP = _mobData._maxHp;
             _agent.speed = _mobData._moveSpeed;
             _agent.stoppingDistance = _mobData._attackRange;
@@ -41,15 +39,40 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     }
     void Start()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null) _target = player.transform;
-
         if (PhotonNetwork.IsMasterClient)
         {
             BattleManager._instance.RegisterMonster(this);
             ChangeState(new MChaseState(this));
         }
 
+    }
+
+    //가까운 플레이어를 찾는 메서드
+    public void FindNearestPlayer()
+    {
+        var players = BattleManager._instance.PlayerList;
+
+        if (players == null || players.Count == 0)
+        {
+            _target = null;
+            return;
+        }
+        float minDistance = Mathf.Infinity; //거리 초기화(초기 설정은 무한대)
+        Transform tempTarget = null;
+        Vector3 myPos = transform.position; //몹 위치
+
+        foreach (Transform p in players)
+        {
+            if (p == null) continue;
+
+            float distance = (p.position - myPos).sqrMagnitude;
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                tempTarget = p.transform;
+            }
+        }
+        _target = tempTarget;
     }
 
     void Update()

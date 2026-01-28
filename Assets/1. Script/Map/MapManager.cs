@@ -38,11 +38,11 @@ public class MapManager : MonoBehaviour
     //노드를 선택하는 메서드
     public void ExecuteEvent(NodeDataSO data, NodeEvent currentNode)
     {
-        //if (!PhotonNetwork.IsMasterClient)
-        //{
-        //    Debug.LogWarning("방장만 노드 이벤트를 실행할 수 있습니다.");
-        //    return;
-        //}
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogWarning("방장만 노드 이벤트를 실행할 수 있습니다.");
+            return;
+        }
 
         //해당 노드의 좌표만 받아 놓기
         _currentRow = currentNode.MapNode.Row;
@@ -57,8 +57,8 @@ public class MapManager : MonoBehaviour
         if (!string.IsNullOrEmpty(data._sceneName))
         {
             Debug.Log($"[맵매니저] 노드 이벤트 실행: {data._nodeName}, 씬 로드: {data._sceneName}");
-            SceneManager.LoadScene(data._sceneName);
-            //PhotonNetwork.LoadLevel(data._sceneName);
+            //SceneManager.LoadScene(data._sceneName);
+            PhotonNetwork.LoadLevel(data._sceneName);
         }
         else
         {

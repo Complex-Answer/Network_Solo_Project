@@ -9,7 +9,7 @@ public class DashState : IState
     }
     public void Enter()
     {
-        _player.Animator.CrossFade("DashTree", 0.05f);
+        _player.Animator.SetTrigger("OnDash");
 
         _player.Animator.SetFloat("DirX", _player.PlayerMove.Move.x, 0.1f, Time.deltaTime);
         _player.Animator.SetFloat("DirY", _player.PlayerMove.Move.y, 0.1f, Time.deltaTime);

@@ -28,6 +28,8 @@ public class PlayerAttack : MonoBehaviourPun
             return;
         }
 
+        _isAttack = true;
+
         int currentIndex = Random.Range(0, 2);
 
         if (currentIndex == _lastIndex)
@@ -36,15 +38,18 @@ public class PlayerAttack : MonoBehaviourPun
         }
         _lastIndex = currentIndex; //마지막 인덱스를 저장
 
+        _player.Animator.SetInteger("AttackIndex", currentIndex);
+        _player.Animator.SetTrigger("OnAttack");
+
         StartCoroutine(AttackSpeed()); //공격속도 딜레이
         //_player.photonView.RPC("RPC_Attack", RpcTarget.All, currentIndex); //위에서 랜덤으로 지정된 인덱스들을 RPC로 쏴주기
-        RPC_Attack(currentIndex); //잠시 네트워크 안쓸 때 테스트용
+        //RPC_Attack(currentIndex); //잠시 네트워크 안쓸 때 테스트용
     }
 
     [PunRPC]
     private void RPC_Attack(int index)
     {
-        _isAttack = true;
+       
 
         string attackName = (index == 0) ? "Attack01" : "Attack02"; //이제 어택01이랑 어택02를 골라줌
         _player.Animator.CrossFade(attackName, 0.1f, 1);

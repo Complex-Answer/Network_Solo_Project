@@ -1,21 +1,29 @@
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class TrackingMouse : MonoBehaviour
+public class TrackingMouse : MonoBehaviourPun
 {
     [SerializeField] private float rotationSpeed = 10f;
 
     void Update()
     {
+        if (photonView != null && !photonView.IsMine)
+        {
+            return;
+        }
+
         RotationToMouse();
     }
 
     private void RotationToMouse()
     {
+        if (Mouse.current == null) return;
+
         Vector2 mouseScreenPos = Mouse.current.position.ReadValue();
         Ray ray = Camera.main.ScreenPointToRay(mouseScreenPos);
 
-        Plane groundPlane = new Plane(Vector3.up, transform.position);
+        Plane groundPlane = new(Vector3.up, transform.position);
 
         if (groundPlane.Raycast(ray, out float enter))
         {

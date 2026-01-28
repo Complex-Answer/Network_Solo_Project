@@ -10,10 +10,11 @@ public class BattleManager : MonoBehaviourPunCallbacks
     [SerializeField] string portalPrefabName = "Portal";
     [SerializeField] Transform portalSpawnPoint;
 
+    private List<Transform> _playerList = new();
+    private List<BasicMonster> _aliveMonsters = new();
 
     public bool IsBattle { get; private set; } = false;
-
-    private List<BasicMonster> _aliveMonsters = new();
+    public List<Transform> PlayerList { get { return _playerList; } }
     private void Awake()
     {
         _instance = this;
@@ -39,7 +40,6 @@ public class BattleManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-
         _aliveMonsters.Remove(monster);
         Debug.Log($"몬스터 현재 남은 마리 수: {_aliveMonsters.Count}");
         // 몹이 다 죽었으면 승리 처리
@@ -47,6 +47,25 @@ public class BattleManager : MonoBehaviourPunCallbacks
         {
             WinBattle();
         }
+    }
+
+    public void RegisterPlayer(Transform player)
+    {
+        if (!PlayerList.Contains(player))
+        {
+            PlayerList.Add(player);
+            Debug.Log("플레이어 등록 완료");
+        }
+    }
+
+    public void RemovePlayer(Transform player)
+    {
+        if (PlayerList.Contains(player))
+        {
+            PlayerList.Remove(player);
+        }
+
+        _playerList.RemoveAll(p => p == null);
     }
 
     public void WinBattle()
