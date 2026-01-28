@@ -26,20 +26,15 @@ public class MapManager : MonoBehaviour
     #endregion
     private void Awake()
     {
-       
-        
         PhotonNetwork.AutomaticallySyncScene = true;
         if (_instance == null)
         {
             _instance = this;
-            DontDestroyOnLoad(gameObject); // 이 줄이 있어야 데이터가 유지됩니다
+            DontDestroyOnLoad(gameObject);
         }
         else { Destroy(gameObject); }
     }
-   
-    
-    //그냥 맵 껐다 켜주는 거
-   
+
     //노드를 선택하는 메서드
     public void ExecuteEvent(NodeDataSO data, NodeEvent currentNode)
     {

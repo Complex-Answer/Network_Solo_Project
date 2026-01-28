@@ -20,13 +20,23 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     public Transform Target {  get { return _target; } set { _target = value; } }
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
 
         if (_mobData != null)
         {
+            if (_mobData._enemyModelPrefab != null)
+            {
+                GameObject model = Instantiate(_mobData._enemyModelPrefab, transform);
+                model.transform.localPosition = Vector3.zero;
+                model.transform.localRotation = Quaternion.identity;
+
+                _animator = model.GetComponent<Animator>();
+            }
+
+
             _currentHP = _mobData._maxHp;
             _agent.speed = _mobData._moveSpeed;
+            _agent.stoppingDistance = _mobData._attackRange;
         }
     }
     void Start()
