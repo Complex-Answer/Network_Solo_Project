@@ -8,12 +8,14 @@ public class BattleManager : MonoBehaviourPunCallbacks
     public static BattleManager _instance;
 
     [SerializeField] string portalPrefabName = "Portal";
+    //포탈 위치
     [SerializeField] Transform portalSpawnPoint;
 
     private List<Transform> _playerList = new();
     private List<BasicMonster> _aliveMonsters = new();
 
     public bool IsBattle { get; private set; } = false;
+    public bool IsSpawning { get; set; } = false;
     public List<Transform> PlayerList { get { return _playerList; } }
     private void Awake()
     {
@@ -43,7 +45,7 @@ public class BattleManager : MonoBehaviourPunCallbacks
         _aliveMonsters.Remove(monster);
         Debug.Log($"몬스터 현재 남은 마리 수: {_aliveMonsters.Count}");
         // 몹이 다 죽었으면 승리 처리
-        if (_aliveMonsters.Count <= 0)
+        if (!IsSpawning && _aliveMonsters.Count <= 0)
         {
             WinBattle();
         }
@@ -82,7 +84,6 @@ public class BattleManager : MonoBehaviourPunCallbacks
         IsBattle = true;
         Debug.Log("이김");
         photonView.RPC(nameof(RPC_BattleEnd), RpcTarget.All);
-        //RPC_BattleEnd();
     }
 
     [PunRPC]
