@@ -8,10 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1063800876631293817, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: m_Radius
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1063800876631293817, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6388677367412342084, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
       propertyPath: _mobData
       value: 
       objectReference: {fileID: 11400000, guid: 353a0f67d4cdea446b3e9beed6631371, type: 2}
+    - target: {fileID: 7180835103482388152, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8437777408271352361, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
       propertyPath: m_Name
       value: Slime

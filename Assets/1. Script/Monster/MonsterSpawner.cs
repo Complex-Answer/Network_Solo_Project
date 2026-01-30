@@ -32,8 +32,12 @@ public class MonsterSpawner : MonoBehaviourPunCallbacks
         if (prefab == null) return;
 
         Transform spawnPoint = _spawnPoints[Random.Range(0, _spawnPoints.Length)];
+        Vector2 randomCircle = Random.insideUnitCircle * 3f; //직선으로 나오는게 아닌 원형으로 하나씩 튀어나옴
 
-        PhotonNetwork.Instantiate(prefab.name, spawnPoint.position, Quaternion.identity);
+        //위의 원을 바탕으로 랜덤으로 소환
+        Vector3 finalSpawnPos = spawnPoint.position + new Vector3(randomCircle.x, 0, randomCircle.y);
+
+        PhotonNetwork.Instantiate(prefab.name, finalSpawnPos, Quaternion.identity);
     }
     IEnumerator SpawnRoutine()
     {

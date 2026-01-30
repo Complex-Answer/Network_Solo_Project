@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Networking : MonoBehaviourPunCallbacks
 {
-    
+    [SerializeField] Transform _spawn;
     void Start()
     {
         Debug.Log("서버에 접속 중...");
@@ -24,7 +24,7 @@ public class Networking : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("방 접속 완료! 플레이어 생성 중...");
-        PhotonNetwork.Instantiate("Player", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Player", _spawn.position, Quaternion.identity);
     }
 
 

@@ -14,6 +14,9 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     private Transform _target;
     private PlayerManager _targetHealth;
     private Collider _collider;
+    private int _syncAttackCount = 0; 
+    private int _lastAttackCount = 0;
+    private bool _isDead = false;
 
     private IMState _mobState;
     private Animator _animator;
@@ -124,15 +127,41 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
             ChangeState(new MDieState(this));
         }
     }
+    public void TriggerAttack()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _syncAttackCount++; // 숫자를 올림 (방장)
+            if (_animator != null) _animator.SetTrigger("Attack");
+        }
+    }
+    public void TriggerDie()
+    {
+        if (PhotonNetwork.IsMasterClient && !_isDead)
+        {
+            _isDead = true;
+            if (_animator != null) _animator.SetTrigger("Die");
+        }
+    }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
         {
             stream.SendNext(_currentHP); // 방장이 체력 보냄
+            stream.SendNext(_isDead);
+            stream.SendNext(_syncAttackCount);
         }
         else
         {
             _currentHP = (int)stream.ReceiveNext(); // 남들이 체력 받음
+            _isDead = (bool)stream.ReceiveNext();
+            int receivedCount = (int)stream.ReceiveNext();
+
+            if (receivedCount > _lastAttackCount)
+            {
+                if (_animator != null) _animator.SetTrigger("Attack");
+                _lastAttackCount = receivedCount; //숫자 올라감
+            }
         }
     }
 
@@ -151,4 +180,5 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+    
 }

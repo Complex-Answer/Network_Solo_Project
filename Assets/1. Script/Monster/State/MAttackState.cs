@@ -13,7 +13,6 @@ public class MAttackState : IMState
     }
     public void Enter()
     {
-        _lastAttackTime = Time.time;
         if (_mob.Animator != null)
         {
             _mob.Animator.SetFloat("AttackSpeed", _mob.AttackSpeed);
@@ -50,7 +49,7 @@ public class MAttackState : IMState
 
             if (_mob.Animator != null)
             {
-                _mob.Animator.SetTrigger("Attack");
+                _mob.TriggerAttack();
             }
         }
 

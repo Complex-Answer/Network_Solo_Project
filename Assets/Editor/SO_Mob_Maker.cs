@@ -42,7 +42,7 @@ public class SO_Mob_Maker : EditorWindow
             EditorGUILayout.Space(5);
 
             GUILayout.Label($"Mob Stats", EditorStyles.boldLabel);
-            _monsterSO[i]._moveSpeed = EditorGUILayout.IntField("MoveSpeed", _monsterSO[i]._moveSpeed);
+            _monsterSO[i]._moveSpeed = EditorGUILayout.FloatField("MoveSpeed", _monsterSO[i]._moveSpeed);
             _monsterSO[i]._attackDamage = EditorGUILayout.IntField("Damage", _monsterSO[i]._attackDamage);
             _monsterSO[i]._maxHp = EditorGUILayout.IntField("Hp", _monsterSO[i]._maxHp);
             _monsterSO[i]._attackRange = EditorGUILayout.FloatField("Range", _monsterSO[i]._attackRange);

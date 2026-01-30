@@ -15,7 +15,7 @@ MonoBehaviour:
   _enemyName: Dragon
   _maxHp: 100
   _attackDamage: 20
-  _attackSpeed: 1
-  _moveSpeed: 7
+  _attackSpeed: 0.5
+  _moveSpeed: 3
   _enemyModelPrefab: {fileID: 5588023136953167307, guid: 1738451b5a81fa141bdb48fd43b7d3bd, type: 3}
-  _attackRange: 10
+  _attackRange: 1

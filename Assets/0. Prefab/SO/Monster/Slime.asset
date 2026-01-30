@@ -16,6 +16,6 @@ MonoBehaviour:
   _maxHp: 10
   _attackDamage: 5
   _attackSpeed: 0.7
-  _moveSpeed: 5
+  _moveSpeed: 2.5
   _enemyModelPrefab: {fileID: 7070311177895314508, guid: 7a3969b6fa1bcc34586e22b39561f23b, type: 3}
-  _attackRange: 3
+  _attackRange: 2

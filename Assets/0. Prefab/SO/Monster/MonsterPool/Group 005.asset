@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd49d2245f978242a7ba5974cad8a2a, type: 3}
   m_Name: Group 005
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPoolSO
-  monsterPrefabs: []
+  monsterPrefabs:
+  - {fileID: 6788839382354266937, guid: b8d878f15d08ebc468ed5e46c7f3f6dd, type: 3}

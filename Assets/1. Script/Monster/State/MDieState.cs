@@ -22,7 +22,7 @@ public class MDieState : IMState
 
         if (_mob.Animator != null)
         {
-            _mob.Animator.SetTrigger("Die");
+            _mob.TriggerDie();
         }
 
         

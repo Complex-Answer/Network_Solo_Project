@@ -8,10 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1063800876631293817, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: m_Radius
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1063800876631293817, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: m_StoppingDistance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6388677367412342084, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
       propertyPath: _mobData
       value: 
       objectReference: {fileID: 11400000, guid: 8bb8b9f3068cd144eb83523dc2951c15, type: 2}
+    - target: {fileID: 7180835103482388152, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: ObservedComponents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8437777408271352361, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
       propertyPath: m_Name
       value: Dragon

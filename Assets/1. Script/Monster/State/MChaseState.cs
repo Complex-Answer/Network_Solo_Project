@@ -8,17 +8,20 @@ public class MChaseState : IMState
 
     private float _searchTimer = 0f;
     private float _searchInterval = 0.2f;
+    private Vector3 randomOffset;
     public MChaseState(BasicMonster mob)
     {
         _mob = mob;
         _agent = mob.GetComponent<NavMeshAgent>();
+        randomOffset = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f));
+        _agent.avoidancePriority = Random.Range(0, 100);
     }
     public void Enter()
     {
-        if (_mob.Animator != null)
-        {
-            _mob.Animator.SetBool("IsMoving", true);
-        }
+        //if (_mob.Animator != null)
+        //{
+        //    _mob.Animator.SetBool("IsMoving", true);
+        //}
         _mob.FindNearestPlayer();
     }
 
@@ -29,7 +32,7 @@ public class MChaseState : IMState
         {
             _agent.ResetPath();
         }
-        _mob.Animator.SetBool("IsMoving", false);
+        //_mob.Animator.SetBool("IsMoving", false);
     }
 
 
@@ -45,7 +48,7 @@ public class MChaseState : IMState
         if (_mob.Target != null)
         {
             //내브메쉬를 이용해 타겟으로 이동
-            _agent.SetDestination(_mob.Target.position);
+            _agent.SetDestination(_mob.Target.position+randomOffset);
 
             // 거리 체크
             float distance = Vector3.Distance(_mob.transform.position, _mob.Target.position);
