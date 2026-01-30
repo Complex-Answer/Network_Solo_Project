@@ -15,6 +15,7 @@ MonoBehaviour:
   _enemyName: Spider
   _maxHp: 25
   _attackDamage: 10
+  _attackSpeed: 0.8
   _moveSpeed: 8
   _enemyModelPrefab: {fileID: 5834550504014231349, guid: 96437254e6510b648a65984101748536, type: 3}
   _attackRange: 10

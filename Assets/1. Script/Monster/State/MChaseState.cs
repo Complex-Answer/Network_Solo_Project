@@ -5,6 +5,9 @@ public class MChaseState : IMState
 {
     BasicMonster _mob;
     NavMeshAgent _agent;
+
+    private float _searchTimer = 0f;
+    private float _searchInterval = 0.2f;
     public MChaseState(BasicMonster mob)
     {
         _mob = mob;
@@ -16,6 +19,7 @@ public class MChaseState : IMState
         {
             _mob.Animator.SetBool("IsMoving", true);
         }
+        _mob.FindNearestPlayer();
     }
 
     public void Exit()
@@ -31,7 +35,12 @@ public class MChaseState : IMState
 
     public void Update()
     {
-        _mob.FindNearestPlayer();
+        _searchTimer += Time.deltaTime;
+        if (_searchTimer >= _searchInterval)
+        {
+            _searchTimer = 0f;
+            _mob.FindNearestPlayer();
+        }
 
         if (_mob.Target != null)
         {
@@ -45,7 +54,7 @@ public class MChaseState : IMState
             if (distance <= _agent.stoppingDistance)
             {
                 // 공격 상태로 전환
-                // _mob.ChangeState(new MAttackState(_mob)); 
+                 _mob.ChangeState(new MAttackState(_mob));
             }
         }
     }

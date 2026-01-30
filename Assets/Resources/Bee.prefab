@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2329282454252479200, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b24e312a6c98e9d428345ae1f62e0415, type: 2}
     - target: {fileID: 6388677367412342084, guid: 3b2b1efe80effb449b069b40f0bce464, type: 3}
       propertyPath: _mobData
       value: 

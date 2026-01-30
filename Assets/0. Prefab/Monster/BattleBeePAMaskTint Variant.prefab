@@ -300,6 +300,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 161.48347
       objectReference: {fileID: 0}
+    - target: {fileID: 2494406509016790015, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b24e312a6c98e9d428345ae1f62e0415, type: 2}
     - target: {fileID: 2693393303947838910, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.22762796
@@ -818,15 +822,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8394082251534756229, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.65
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8394082251534756229, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000023841858
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8394082251534756229, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.85
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8394082251534756229, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
       propertyPath: m_LocalRotation.w
@@ -931,5 +935,25 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9166538251162596159, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2532367520116074995}
   m_SourcePrefab: {fileID: 100100000, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
+--- !u!1 &2143841332175290298 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9166538251162596159, guid: 84eafd4c69994a259d691a4b849d63ba, type: 3}
+  m_PrefabInstance: {fileID: 7130994452885671045}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2532367520116074995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143841332175290298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8296f6c335215d94eab6d2182f23f31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterProxy

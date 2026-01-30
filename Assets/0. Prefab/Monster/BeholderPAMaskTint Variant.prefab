@@ -242,15 +242,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4654675289759946, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.82
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4654675289759946, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.00000023841858
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4654675289759946, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.11
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4654675289759946, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -576,8 +576,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: BeholderPAMaskTint Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4654675297439530, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 5e5eeef37d79a33449a8a324826c5676, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4654675290193130, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4312132536495946767}
   m_SourcePrefab: {fileID: 100100000, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
+--- !u!1 &7060463007208783156 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4654675290193130, guid: 81974ebb44334aaf9c9cd702536280e0, type: 3}
+  m_PrefabInstance: {fileID: 7055808924926099934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4312132536495946767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7060463007208783156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8296f6c335215d94eab6d2182f23f31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterProxy

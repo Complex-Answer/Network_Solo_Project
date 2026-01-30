@@ -108,12 +108,7 @@ public class PlayerManager : MonoBehaviourPun
     }
     public void TakeDamage(float damaged)
     {
-        if (photonView.IsMine)
-        {
-            ProcessDamage(damaged);
-
-            photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.Others, damaged);
-        }
+        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.Others, damaged);
     }
     [PunRPC]
     private void RPC_TakeDamage(float damaged)
@@ -128,10 +123,10 @@ public class PlayerManager : MonoBehaviourPun
 
         OnHpChanged?.Invoke(_hp, MaxHp);
 
-        if (_hp <= 0)
+        if (_hp <= 0 && photonView.IsMine)
         {
             _hp = 0;
-            if(_state is not DieState)
+            if (_state is not DieState)
             {
                 //Á×´Â Ã³¸®
                 MoveState(new DieState(this));

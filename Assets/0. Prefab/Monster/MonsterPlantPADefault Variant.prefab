@@ -430,15 +430,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4700302584741114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.56
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4700302584741114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0000009536743
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4700302584741114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.91
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4700302584741114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -560,8 +560,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -13.89076
       objectReference: {fileID: 0}
+    - target: {fileID: 95661104805808786, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 57cc805b1244c4e4fa7775c3a0ab7ba6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1748489546896114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5354851721019152077}
   m_SourcePrefab: {fileID: 100100000, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
+--- !u!1 &1014842350542278476 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1748489546896114, guid: 053584150b834dfc9b4b1d10eb5a5ea2, type: 3}
+  m_PrefabInstance: {fileID: 1014232957735296446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-5354851721019152077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014842350542278476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8296f6c335215d94eab6d2182f23f31d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterProxy

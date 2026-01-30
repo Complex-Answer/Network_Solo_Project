@@ -15,6 +15,7 @@ MonoBehaviour:
   _enemyName: MonsterPlant
   _maxHp: 30
   _attackDamage: 10
+  _attackSpeed: 0.8
   _moveSpeed: 1
   _enemyModelPrefab: {fileID: 1014842350542278476, guid: 817deb17f25e4d44cadb37783f3cd70f, type: 3}
   _attackRange: 2

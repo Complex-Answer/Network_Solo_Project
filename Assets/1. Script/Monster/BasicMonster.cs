@@ -12,15 +12,23 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     private int _currentHP;
     private NavMeshAgent _agent;
     private Transform _target;
+    private PlayerManager _targetHealth;
+    private Collider _collider;
 
     private IMState _mobState;
     private Animator _animator;
     public IMState MobState => _mobState;
     public Animator Animator => _animator;
-    public Transform Target {  get { return _target; } set { _target = value; } }
+    public Transform Target { get { return _target; } set { _target = value; } }
+    public NavMeshAgent Agent { get { return _agent; } }
+    public Collider MobCollider => _collider;
+
+    public float AttackSpeed => _mobData._attackSpeed;
+    public int AttackDamage => _mobData._attackDamage;
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
+        _collider = GetComponent<Collider>();
 
         if (_mobData != null)
         {
@@ -72,7 +80,20 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
                 tempTarget = p.transform;
             }
         }
-        _target = tempTarget;
+        if (_target != tempTarget)
+        {
+            _target = tempTarget;
+
+            if (_target != null)
+            {
+                // 공격할 때 매번 찾지 않도록 여기서 미리 컴포넌트를 캐싱해둠
+                _targetHealth = _target.GetComponent<PlayerManager>();
+            }
+            else
+            {
+                _targetHealth = null;
+            }
+        }
     }
 
     void Update()
@@ -90,7 +111,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
         _mobState.Enter();
 
     }
-    public void OnDamage(int damage)
+    public void OnMobDamage(int damage)
     {
         photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
     }
@@ -100,9 +121,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
         _currentHP -= damage;
         if (_currentHP <= 0 && PhotonNetwork.IsMasterClient)
         {
-            // 방장이 확인하고 몹 제거 보고
-            BattleManager._instance.RemoveMonster(this);
-            PhotonNetwork.Destroy(gameObject);
+            ChangeState(new MDieState(this));
         }
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -114,6 +133,22 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
         else
         {
             _currentHP = (int)stream.ReceiveNext(); // 남들이 체력 받음
+        }
+    }
+
+    public void OnAttackHit() // 애니메이션 이벤트가 이 이름을 찾아서 호출합니다.
+    {
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        if (Target != null)
+        {
+            // 근거리 체크 후 직접 데미지
+            float distance = (_target.position - transform.position).sqrMagnitude;
+            float range = (_agent.stoppingDistance + 0.5f) * (_agent.stoppingDistance + 0.5f);
+            if (distance <= range)
+            {
+                _targetHealth?.TakeDamage(AttackDamage);
+            }
         }
     }
 }
