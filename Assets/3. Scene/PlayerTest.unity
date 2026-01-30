@@ -586,6 +586,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95eb81155bd5dcd439a56b57916584cf, type: 3}
+--- !u!1 &580185497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 580185498}
+  m_Layer: 0
+  m_Name: Portal
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &580185498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 580185497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 67, y: 0, z: 67}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &883426181
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,9 +647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterSpawner
   _groupData: {fileID: 0}
-  _totalSpawnCount: 30
   _spawnPoints: []
-  _exitPortal: {fileID: 0}
 --- !u!4 &883426183
 Transform:
   m_ObjectHideFlags: 0
@@ -1067,63 +1096,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b12128bd897ab8044a99433aef67f56e, type: 3}
---- !u!1001 &1879228908
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.4517026
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.00000047683716
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 4.0002975
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546184, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 439682714516546187, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
-      propertyPath: m_Name
-      value: HCFX_Portal_01
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 6e2d5c22d6c4c9d4a8ff0ed264bec010, type: 3}
 --- !u!1 &2045458968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,6 +1223,52 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &2085612217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2085612219}
+  - component: {fileID: 2085612218}
+  m_Layer: 0
+  m_Name: BattleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2085612218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085612217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 189cfecc59e071d45be8312ba6ef6ac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BattleManager
+  portalPrefabName: Portal
+  portalSpawnPoint: {fileID: 580185498}
+--- !u!4 &2085612219
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2085612217}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2093079021
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1393,4 +1411,5 @@ SceneRoots:
   - {fileID: 2093079021}
   - {fileID: 1799788450}
   - {fileID: 1054187625}
-  - {fileID: 1879228908}
+  - {fileID: 2085612219}
+  - {fileID: 580185498}

@@ -15996,6 +15996,7 @@ GameObject:
   - component: {fileID: 2966310895620020902}
   - component: {fileID: 5148879790505355846}
   - component: {fileID: 3876484211844975285}
+  - component: {fileID: 1855985183525992410}
   - component: {fileID: 202005871052128032}
   - component: {fileID: 29913678149198997}
   - component: {fileID: 6280931416545115445}
@@ -16177,7 +16178,19 @@ MonoBehaviour:
   _interactRange: 2
   _interactLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1024
+--- !u!114 &1855985183525992410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180360334122705540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d324c4edc53ac834ca06ae64e4fd3eaf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowPlayer
 --- !u!54 &202005871052128032
 Rigidbody:
   m_ObjectHideFlags: 0
