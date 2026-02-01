@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 459848745414500886, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 459848745414500886, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
       propertyPath: m_LocalPosition.z
@@ -162,6 +162,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 459848745414500885, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 765268259219626117}
+    - targetCorrespondingSourceObject: {fileID: 459848745414500885, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2869673739535576246}
+    - targetCorrespondingSourceObject: {fileID: 459848745414500885, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2166495091768182273}
+    - targetCorrespondingSourceObject: {fileID: 459848745414500885, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7802188170391788119}
   m_SourcePrefab: {fileID: 100100000, guid: 7d5e53535bf77c340bca21a018e742a1, type: 3}
 --- !u!1 &4250623774413535768 stripped
 GameObject:
@@ -187,7 +196,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.7
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &765268259219626117
 Rigidbody:
@@ -216,3 +225,57 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &-2869673739535576246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4250623774413535768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c3107f79ba84cd47861fdabc2c55838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerProjectile
+  _speed: 15
+  _lifeTime: 3
+  _hitEffect: {fileID: 2944664750218114324, guid: 02def72408e298a45bcd9ea8a197d2c1, type: 3}
+--- !u!114 &-2166495091768182273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4250623774413535768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 7802188170391788119}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &7802188170391788119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4250623774413535768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonTransformView
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1

@@ -12,12 +12,18 @@ public class MDieState : IMState
     }
     public void Enter()
     {
+        if(_mob == null)
+        {
+            return;
+        }
         _dieTimer = Time.time;
 
         if (_mob.Agent != null)
         {
             _mob.Agent.isStopped = true;
             _mob.Agent.ResetPath();
+            _mob.Agent.enabled = false;
+
         }
 
         if (_mob.Animator != null)
@@ -41,6 +47,10 @@ public class MDieState : IMState
 
     public void Update()
     {
+        if (_mob == null)
+        {
+            return;
+        }
         if (PhotonNetwork.IsMasterClient)
         {
             if (Time.time >= _dieTimer + _dissolveDelay)

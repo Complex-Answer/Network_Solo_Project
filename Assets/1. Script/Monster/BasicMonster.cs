@@ -14,6 +14,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     private Transform _target;
     private PlayerManager _targetHealth;
     private Collider _collider;
+    private Rigidbody _rb;
     private int _syncAttackCount = 0; 
     private int _lastAttackCount = 0;
     private bool _isDead = false;
@@ -25,6 +26,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     public Transform Target { get { return _target; } set { _target = value; } }
     public NavMeshAgent Agent { get { return _agent; } }
     public Collider MobCollider => _collider;
+    public Rigidbody Rigidbody => _rb;
 
     public float AttackSpeed => _mobData._attackSpeed;
     public float AttackDamage => _mobData._attackDamage;
@@ -32,6 +34,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     {
         _agent = GetComponent<NavMeshAgent>();
         _collider = GetComponent<Collider>();
+        _rb = GetComponent<Rigidbody>();
 
         if (_mobData != null)
         {
@@ -156,7 +159,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
         }
         else
         {
-            _currentHP = (int)stream.ReceiveNext(); // 남들이 체력 받음
+            _currentHP = (float)stream.ReceiveNext(); // 남들이 체력 받음
             _isDead = (bool)stream.ReceiveNext();
             int receivedCount = (int)stream.ReceiveNext();
 

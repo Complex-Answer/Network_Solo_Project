@@ -8,13 +8,16 @@ public class PlayerProjectile : MonoBehaviourPun
     [SerializeField] float _speed = 15f;
     [SerializeField] float _lifeTime = 3f;
 
+    [SerializeField] GameObject _hitEffect;
     private int _layer = -1;
 
     private Rigidbody _rb;
+    private Collider _col;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _col = GetComponent<Collider>();
         _layer = LayerMask.NameToLayer("Obstacle");
     }
     public void Init(float damage)
@@ -25,18 +28,48 @@ public class PlayerProjectile : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            StartCoroutine(DestroyAfterTime(3f));
+            StartCoroutine(DestroyAfterTime(_lifeTime));
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         if (other.TryGetComponent(out IMobDamaged target))
         {
             target.OnMobDamaged(_damage);
-            PhotonNetwork.Destroy(gameObject);
+            photonView.RPC("CreateHitEffect", RpcTarget.All, transform.position);
+            StartCoroutine(DelayedDestroy());
         }
         if (other.gameObject.layer == _layer) //장애물 (나무, 돌 같은거)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+    [PunRPC]
+    private void CreateHitEffect(Vector3 pos)
+    {
+        if (_hitEffect != null)
+        {
+            GameObject effect = Instantiate(_hitEffect, pos, Quaternion.identity);
+
+            Destroy(effect, 1.5f);
+        }
+    }
+    IEnumerator DelayedDestroy()
+    {
+        _col.enabled = false;
+
+        if (TryGetComponent(out ParticleSystem ps))
+        {
+            ps.Stop();           
+            ps.Clear(); 
+        }
+        yield return new WaitForSeconds(0.1f);
+
+        if (photonView.IsMine)
         {
             PhotonNetwork.Destroy(gameObject);
         }

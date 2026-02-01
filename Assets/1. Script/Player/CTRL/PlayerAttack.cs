@@ -62,11 +62,10 @@ public class PlayerAttack : MonoBehaviourPun
         //투사체 생성
         GameObject magic = PhotonNetwork.Instantiate(_ballPrefab.name, spawnPos, transform.rotation);
 
-        // 3. 데미지 주입
-        PlayerProjectile proj = magic.GetComponent<PlayerProjectile>();
-        if (proj != null)
+        //투사체에게 대미지 입력
+        if (magic.TryGetComponent(out PlayerProjectile proj))
         {
-
+            proj.Init(_player.Attack);
         }
     }
 }
