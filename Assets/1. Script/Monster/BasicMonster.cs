@@ -6,10 +6,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(PhotonTransformView))]
-public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
+public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamaged
 {
     [SerializeField] private MonsterSO _mobData;
-    private int _currentHP;
+    private float _currentHP;
     private NavMeshAgent _agent;
     private Transform _target;
     private PlayerManager _targetHealth;
@@ -27,7 +27,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     public Collider MobCollider => _collider;
 
     public float AttackSpeed => _mobData._attackSpeed;
-    public int AttackDamage => _mobData._attackDamage;
+    public float AttackDamage => _mobData._attackDamage;
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -114,12 +114,12 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
         _mobState.Enter();
 
     }
-    public void OnMobDamage(int damage)
+    public void OnMobDamaged(float damage)
     {
         photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
     }
     [PunRPC]
-    private void RPC_TakeDamage(int damage)
+    private void RPC_TakeDamage(float damage)
     {
         if (PhotonNetwork.IsMasterClient)
         {
