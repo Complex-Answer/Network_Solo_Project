@@ -7,7 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerAttack : MonoBehaviourPun
 {
     PlayerManager _player;
-
+    [SerializeField] Transform _firePoint;
+    public GameObject _ballPrefab;
     bool _isAttack = false;
     int _lastIndex = -1; //밑에서 저장할 인덱스 저장용
     float _attSpeed = 0;
@@ -16,14 +17,14 @@ public class PlayerAttack : MonoBehaviourPun
     {
         _player = GetComponent<PlayerManager>();
     }
-   
+
     public void OnAttack()
     {
         if (!_player.photonView.IsMine)
         {
             return;
         }
-        if ( _isAttack) //중복 실행 불가
+        if (_isAttack) //중복 실행 불가
         {
             return;
         }
@@ -42,19 +43,6 @@ public class PlayerAttack : MonoBehaviourPun
         _player.Animator.SetTrigger("OnAttack");
 
         StartCoroutine(AttackSpeed()); //공격속도 딜레이
-        //_player.photonView.RPC("RPC_Attack", RpcTarget.All, currentIndex); //위에서 랜덤으로 지정된 인덱스들을 RPC로 쏴주기
-        //RPC_Attack(currentIndex); //잠시 네트워크 안쓸 때 테스트용
-    }
-
-    [PunRPC]
-    private void RPC_Attack(int index)
-    {
-       
-
-        string attackName = (index == 0) ? "Attack01" : "Attack02"; //이제 어택01이랑 어택02를 골라줌
-        _player.Animator.CrossFade(attackName, 0.1f, 1);
-
-        //_isAttacking = true; //공격 트리거용 변수
     }
     IEnumerator AttackSpeed() //공격 속도 딜레이 코루틴
     {
@@ -62,5 +50,23 @@ public class PlayerAttack : MonoBehaviourPun
 
         yield return new WaitForSeconds(_attSpeed);
         _isAttack = false;
+    }
+    public void OnFire()
+    {
+        // 내꺼일때만 투사체 생성
+        if (!photonView.IsMine) return;
+
+        // 생성 위치
+        _firePoint.GetPositionAndRotation(out Vector3 spawnPos, out Quaternion spawnRot);
+
+        //투사체 생성
+        GameObject magic = PhotonNetwork.Instantiate(_ballPrefab.name, spawnPos, transform.rotation);
+
+        // 3. 데미지 주입
+        PlayerProjectile proj = magic.GetComponent<PlayerProjectile>();
+        if (proj != null)
+        {
+
+        }
     }
 }

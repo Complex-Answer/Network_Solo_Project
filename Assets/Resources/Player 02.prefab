@@ -551,7 +551,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &839359151446776677
 Transform:
   m_ObjectHideFlags: 0
@@ -2587,7 +2587,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &165454256218221310
 Transform:
   m_ObjectHideFlags: 0
@@ -5308,7 +5308,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1390474176767992503
 Transform:
   m_ObjectHideFlags: 0
@@ -6021,7 +6021,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1684187297812615776
 Transform:
   m_ObjectHideFlags: 0
@@ -7883,7 +7883,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1645636460461144240
 Transform:
   m_ObjectHideFlags: 0
@@ -9374,7 +9374,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2434987073241927831
 Transform:
   m_ObjectHideFlags: 0
@@ -13128,7 +13128,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5287895528167914744
 Transform:
   m_ObjectHideFlags: 0
@@ -15008,7 +15008,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4921663009790059806
 Transform:
   m_ObjectHideFlags: 0
@@ -16003,7 +16003,7 @@ GameObject:
   - component: {fileID: 1991511413741958487}
   - component: {fileID: 6351873580942353218}
   m_Layer: 8
-  m_Name: Player
+  m_Name: Player 02
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16126,6 +16126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133f29b2ded5a6a4b8e31784b572d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  _firePoint: {fileID: 6971011051357321104}
+  _ballPrefab: {fileID: 459848745414500885, guid: 2b2c7b1cd9296e04f815db6fbd468872, type: 3}
 --- !u!114 &8038611775785392982
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16975,7 +16977,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5917993251610578944
 Transform:
   m_ObjectHideFlags: 0
@@ -17752,7 +17754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6626561950110545929
 Transform:
   m_ObjectHideFlags: 0
@@ -21609,7 +21611,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8980696946057673211
 Transform:
   m_ObjectHideFlags: 0

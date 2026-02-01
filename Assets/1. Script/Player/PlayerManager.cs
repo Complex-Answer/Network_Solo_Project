@@ -108,6 +108,7 @@ public class PlayerManager : MonoBehaviourPun
     }
     public void TakeDamage(float damaged)
     {
+        ProcessDamage(damaged);
         photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.Others, damaged);
     }
     [PunRPC]

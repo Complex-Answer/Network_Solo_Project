@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 /// <summary>
@@ -17,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _attackSpeed = 4;
     [SerializeField] private int _gold = 99;
 
+    [Header("캐릭터 외형 및 투사체 설정")]
+    public List<PlayerSO> characterSkins = new ();
     public float Hp { get { return _currentHp; } set { _currentHp = value; } }
     public float MaxHp => _maxHp;
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }

@@ -1834,6 +1834,7 @@ MonoBehaviour:
   _attack: 5
   _attackSpeed: 1
   _gold: 99
+  characterSkins: []
 --- !u!4 &1005403307
 Transform:
   m_ObjectHideFlags: 0

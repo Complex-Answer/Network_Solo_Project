@@ -121,10 +121,13 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void RPC_TakeDamage(int damage)
     {
-        _currentHP -= damage;
-        if (_currentHP <= 0 && PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
-            ChangeState(new MDieState(this));
+            _currentHP -= damage;
+            if (_currentHP <= 0 && PhotonNetwork.IsMasterClient)
+            {
+                ChangeState(new MDieState(this));
+            }
         }
     }
     public void TriggerAttack()
