@@ -7,9 +7,11 @@ public class BattleManager : MonoBehaviourPunCallbacks
 {
     public static BattleManager _instance;
 
-    [SerializeField] string portalPrefabName = "Portal";
+    [SerializeField] string _portalPrefabName = "Portal";
     //포탈 위치
-    [SerializeField] Transform portalSpawnPoint;
+    [SerializeField] Transform _portalSpawnPoint;
+    [SerializeField] Transform _playerSpawnPoint;
+    [SerializeField] SetStat _statUI;
 
     private List<Transform> _playerList = new();
     private List<BasicMonster> _aliveMonsters = new();
@@ -21,12 +23,44 @@ public class BattleManager : MonoBehaviourPunCallbacks
     {
         _instance = this;
         PhotonNetwork.AutomaticallySyncScene = true;
+
+        PhotonView pv = GetComponent<PhotonView>();
+        if (pv != null)
+        {
+            // 만약 ID가 0이라면 강제로 1 할당 (씬에 미리 배치된 경우만 해당)
+            if (pv.ViewID == 0)
+            {
+                pv.ViewID = 1;
+                Debug.Log("<color=yellow>BattleManager: ID가 0이라 강제로 1을 할당했습니다.</color>");
+            }
+            else
+            {
+                Debug.Log($"<color=green>BattleManager: 정상적으로 ID {pv.ViewID}를 사용 중입니다.</color>");
+            }
+        }
     }
     private void Start()
     {
-        if(MapManager._instance != null)
+        SpawnMyPlayer();
+        if (MapManager._instance != null)
         {
             MapManager._instance.CanMove = false;
+        }
+    }
+    private void SpawnMyPlayer()
+    {
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("PlayerNum", out var val))
+        {
+            int myNumber = (int)val;
+            string prefabName = $"Player {myNumber:D2}";
+
+            int offsetIndex = myNumber - 1;
+            Vector3 spawnPos = _playerSpawnPoint.position + (_playerSpawnPoint.right * offsetIndex * 2f);
+
+            // 계산된 위치(spawnPos)로 소환
+            PhotonNetwork.Instantiate(prefabName, spawnPos, _playerSpawnPoint.rotation);
+
+            Debug.Log($"[배틀] {myNumber}번 플레이어가 기준점으로부터 {offsetIndex * 2f}m 떨어진 곳에 소환됨.");
         }
     }
     public void RegisterMonster(BasicMonster monster)
@@ -72,11 +106,11 @@ public class BattleManager : MonoBehaviourPunCallbacks
 
     public void WinBattle()
     {
-        
-        //if (!PhotonNetwork.IsMasterClient)
-        //{
-        //    return;
-        //}
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
         if (IsBattle)
         {
             return;
@@ -91,16 +125,24 @@ public class BattleManager : MonoBehaviourPunCallbacks
     {
         IsBattle = true;
         Debug.Log("전투 이김, 포탈 등장");
-        
-        SpawnPortal();
+
+        ShowStatUpUI();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SpawnPortal();
+        }
 
         // 이기고 전투 보상 획득
     }
     private void SpawnPortal()
     {
-        Vector3 spawnPos = (portalSpawnPoint != null) ? portalSpawnPoint.position : Vector3.zero;
+        Vector3 spawnPos = (_portalSpawnPoint != null) ? _portalSpawnPoint.position : Vector3.zero;
         // 포탈은 모든 사람에게 보여야 하므로 네트워크 소환
-        PhotonNetwork.Instantiate(portalPrefabName, spawnPos, Quaternion.identity);
+        PhotonNetwork.Instantiate(_portalPrefabName, spawnPos, Quaternion.identity);
+    }
+    private void ShowStatUpUI()
+    {
+        _statUI.Open();
     }
 
 }

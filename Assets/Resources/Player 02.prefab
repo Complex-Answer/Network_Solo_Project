@@ -4024,6 +4024,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1166761507760452546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 132312035677249616}
+  m_Layer: 8
+  m_Name: Fire
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &132312035677249616
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1166761507760452546}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7093532, y: -0, z: -0, w: 0.7048532}
+  m_LocalPosition: {x: 0.020019531, y: 0.52830076, z: 1.3026643}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6813625548216743998}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1295806774754929160
 GameObject:
   m_ObjectHideFlags: 0
@@ -16046,6 +16077,7 @@ Transform:
   - {fileID: 2040300807575794616}
   - {fileID: 7270620370349004276}
   - {fileID: 7248216036205310890}
+  - {fileID: 132312035677249616}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6414363006743549607
@@ -16126,7 +16158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 133f29b2ded5a6a4b8e31784b572d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  _firePoint: {fileID: 6971011051357321104}
+  _firePoint: {fileID: 132312035677249616}
   _ballPrefab: {fileID: 459848745414500885, guid: 2b2c7b1cd9296e04f815db6fbd468872, type: 3}
 --- !u!114 &8038611775785392982
 MonoBehaviour:

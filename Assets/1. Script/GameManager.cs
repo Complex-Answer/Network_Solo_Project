@@ -63,17 +63,12 @@ public class GameManager : MonoBehaviour
         if (playerWon)
         {
             yield return new WaitForSeconds(1.5f);
-            SpawnPortal();
         }
         else
         {
             yield return new WaitForSeconds(2f);
             SceneManager.LoadScene("GameOverScene");
         }
-    }
-    private void SpawnPortal()
-    {
-
     }
     public void UpgradeStats(string statType, float amount)
     {

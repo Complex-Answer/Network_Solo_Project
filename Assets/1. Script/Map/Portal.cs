@@ -25,7 +25,7 @@ public class Portal : MonoBehaviourPun, IInteractable
     private void PRC_Portal()
     {
         GameObject myChar = GetLocalPlayer(); //개인 캐릭터 확인
-        if (myChar != null) return;
+        if (myChar == null) return;
 
         //입력 차단
         if (myChar.TryGetComponent(out _activeInput))

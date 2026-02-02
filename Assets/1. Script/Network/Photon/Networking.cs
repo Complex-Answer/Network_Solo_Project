@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Networking : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Transform _spawn;
+    [SerializeField] Transform[] _spawn;
     void Start()
     {
         Debug.Log("서버에 접속 중...");
@@ -62,7 +62,15 @@ public class Networking : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
         string prefabName = $"Player {myNumber:D2}";
+        int spawnIndex = myNumber - 1;
 
-        PhotonNetwork.Instantiate(prefabName, _spawn.position, Quaternion.identity);
+        if(spawnIndex < _spawn.Length)
+        {
+            PhotonNetwork.Instantiate(prefabName, _spawn[spawnIndex].position, _spawn[spawnIndex].rotation);
+        }
+        else
+        {
+            PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
+        }
     }//까먹지 말라고 주석 다쳐놨다...
 }

@@ -139,6 +139,12 @@ public class PlayerManager : MonoBehaviourPun
     {
         if (photonView != null && !photonView.IsMine) return;
 
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Lobby")
+        {
+            _state?.Update();
+            return;
+        }
+
         Vector2 moveDir = _moveAction.ReadValue<Vector2>();
         _playerMove.SetMoveInput(moveDir);
 
