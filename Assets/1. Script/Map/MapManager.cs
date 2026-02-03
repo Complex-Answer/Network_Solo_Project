@@ -11,13 +11,14 @@ using Photon.Pun;
 public class MapManager : MonoBehaviourPunCallbacks
 {
     #region 필드
-    
+
     static public MapManager _instance;
     private List<Vector2> _visitedNodes = new();
 
     private int _currentRow = -1; //-1은 시작 하지않은 위치
     private int _currentCol = -1;
-    public int CurrentRow { get { return _currentRow; } set { _currentRow = value; } } 
+    private bool _isLoding = false;
+    public int CurrentRow { get { return _currentRow; } set { _currentRow = value; } }
     public int CurrentCol { get { return _currentCol; } set { _currentCol = value; } }
     public bool CanMove { get; set; } = true; //전투인지 확인하는 불 값 프로퍼티
     public List<Vector2> VisitedNodes => _visitedNodes;
@@ -31,37 +32,55 @@ public class MapManager : MonoBehaviourPunCallbacks
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else { Destroy(gameObject); }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
-
+    
     //노드를 선택하는 메서드
     public void ExecuteEvent(NodeDataSO data, NodeEvent currentNode)
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (_isLoding) return;
+        if (!PhotonNetwork.IsMasterClient) return;
+
+        photonView.RPC(nameof(RPC_ExecuteEventRequest), RpcTarget.All, currentNode.MapNode.Row, currentNode.MapNode.Col, data._sceneName);
+    }
+    [PunRPC]
+    public void RPC_ExecuteEventRequest(int row, int col, string sceneName)
+    {
+
+        _currentRow = row;
+        _currentCol = col;
+
+        Debug.Log($"[RPC] 방장이 이동 명령 수신! 목적지: {sceneName}");
+
+        Vector2 nodePos = new Vector2(row, col);
+        if (!_visitedNodes.Contains(nodePos))
         {
-            Debug.LogWarning("방장만 노드 이벤트를 실행할 수 있습니다.");
-            return;
+            _visitedNodes.Add(nodePos);
         }
 
-        //해당 노드의 좌표만 받아 놓기
-        _currentRow = currentNode.MapNode.Row;
-        _currentCol = currentNode.MapNode.Col;
+        Debug.Log($"PhotonNetwork.LoadLevel({sceneName}) 실행!");
 
-        Vector2 currentNodes = new(CurrentRow, CurrentCol);
-        if (!_visitedNodes.Contains(currentNodes))
+
+        if (!string.IsNullOrEmpty(sceneName))
         {
-            _visitedNodes.Add(currentNodes);
-        }
-        //포톤을 사용해서 씬 전환 (방장만 이동가능)
-        if (!string.IsNullOrEmpty(data._sceneName))
-        {
-            Debug.Log($"[맵매니저] 노드 이벤트 실행: {data._nodeName}, 씬 로드: {data._sceneName}");
-            //SceneManager.LoadScene(data._sceneName);
-            PhotonNetwork.LoadLevel(data._sceneName);
+            _isLoding = true;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                Debug.Log($"모두를 데리고 {sceneName} 씬으로 이동합니다.");
+                PhotonNetwork.LoadLevel(sceneName);
+            }
+            if (BattleManager._instance != null)
+            {
+                BattleManager._instance.WinBattle();
+            }
         }
         else
         {
-            Debug.LogWarning($"[맵매니저] 노드 이벤트 실행: {data._nodeName}, 씬 이름이 비어있습니다.");
+            Debug.LogError("전달받은 씬 이름이 비어있습니다!");
         }
     }
 }

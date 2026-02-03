@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -484633146492480143}
   - component: {fileID: -8777452593496930406}
   - component: {fileID: 1804589248237357789}
+  - component: {fileID: 3304962875082513232}
   m_Layer: 0
   m_Name: barbute
   m_TagString: Untagged
@@ -90,6 +91,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NodeEvent
   _frame: {fileID: 8302856870694130099}
+--- !u!114 &3304962875082513232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8497833609285329171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: PhotonUnityNetworking::Photon.Pun.PhotonView
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &7730554734301907889
 PrefabInstance:
   m_ObjectHideFlags: 0

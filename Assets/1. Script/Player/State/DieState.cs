@@ -1,4 +1,6 @@
+using Photon.Pun;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DieState : IState
 {
@@ -14,14 +16,34 @@ public class DieState : IState
         {
             _player.Animator.SetTrigger("Die");
         }
-        if(_player.Rb != null)
+
+        _player.IsDead = true;
+
+        if (_player.photonView.IsMine)
+        {
+            Debug.Log($"[GameManager] 1번 플레이어 생존 상태 변경: False");
+            _player.ReportDeath();
+        }
+
+        _player.gameObject.tag = "Untagged";
+
+        if (_player.Rb != null)
         {
             _player.Rb.linearVelocity = Vector3.zero;
         }
-        if(GameManager._instance != null)
+        var input = _player.GetComponent<PlayerInput>();
+        if (input != null)
         {
-            GameManager._instance.EndBattle(false);
+            input.enabled = false;
+            Debug.Log("플레이어 입력이 차단되었습니다.");
         }
+
+        if (BattleManager._instance != null)
+        {
+            BattleManager._instance.RemovePlayer(_player);
+        }
+
+        _player.DestroySelfDelayed(2.0f);
     }
 
     public void Exit()

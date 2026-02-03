@@ -6,6 +6,7 @@ public class MDieState : IMState
     private BasicMonster _mob;
     private float _dieTimer;
     private float _dissolveDelay = 2.0f;
+    private bool _isDestroyed = false;
     public MDieState(BasicMonster mob)
     {
         _mob  = mob;
@@ -57,14 +58,11 @@ public class MDieState : IMState
 
     public void Update()
     {
-        if (_mob == null)
-        {
-            return;
-        }
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && !_isDestroyed)
         {
             if (Time.time >= _dieTimer + _dissolveDelay)
             {
+                _isDestroyed = true; // 지웠다고 표시
                 PhotonNetwork.Destroy(_mob.gameObject);
             }
         }

@@ -1,5 +1,6 @@
 using Photon.Pun;
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 /// <summary>
@@ -36,7 +37,7 @@ public class PlayerManager : MonoBehaviourPun
     public float MoveSpeed { get; private set; }
     public float Attack { get; private set; }
     public float AttackSpeed { get; private set; }
-    //public int Gold => _gold;
+    public bool IsDead { get; set; } = false;
     public PlayerMove PlayerMove => _playerMove;
     public PlayerAttack PlayerAttack => _playerAttack;
     public PlayerDash PlayerDash => _playerDash;
@@ -80,7 +81,7 @@ public class PlayerManager : MonoBehaviourPun
 
         if (BattleManager._instance != null)
         {
-            BattleManager._instance.RegisterPlayer(this.transform);
+            BattleManager._instance.RegisterPlayer(this);
         }
 
         MoveState(new MoveState(this));
@@ -136,21 +137,7 @@ public class PlayerManager : MonoBehaviourPun
             }
         }
     }
-    //public void Add
-    //
-    //
-    //(int amount)
-    //{
-    //    if (!photonView.IsMine) return; 
-
-    //    _
-    //
-    //    += amount;
-    //    On
-    //
-    //
-    //    Changed?.Invoke(_gold);
-    //}
+    
     public void RestoreHp(float amount)
     {
         _hp += amount;
@@ -194,11 +181,43 @@ public class PlayerManager : MonoBehaviourPun
         _state = state;
         _state.Enter();
     }
+    public void DestroySelfDelayed(float delay)
+    {
+        if (photonView.IsMine)
+        {
+            StartCoroutine(CoDestroySelf(delay));
+        }
+    }
+
+    private IEnumerator CoDestroySelf(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (PhotonNetwork.IsConnected && photonView != null)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+    public void ReportDeath()
+    {
+        // 내 캐릭터가 죽었다고 모두에게 알림
+        photonView.RPC(nameof(RPC_ReportGlobalDeath), RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+    }
+
+    [PunRPC]
+    private void RPC_ReportGlobalDeath(int actorNr)
+    {
+        // 모든 클라이언트는 본인의 GameManager 장부에 이 사람이 죽었음을 기록함
+        if (GameManager._instance != null)
+        {
+            GameManager._instance.UpdateSurvivalStatus(actorNr, false);
+        }
+    }
     private void OnDestroy()
     {
         if (BattleManager._instance != null)
         {
-            BattleManager._instance.RemovePlayer(this.transform);
+            BattleManager._instance.RemovePlayer(this);
         }
         if (photonView.IsMine && _instance == this)
         {

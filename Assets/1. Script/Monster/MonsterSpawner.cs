@@ -41,8 +41,8 @@ public class MonsterSpawner : MonoBehaviourPunCallbacks
     }
     IEnumerator SpawnRoutine()
     {
-        _totalSpawnCount = Random.Range(10, 21);
-        //_totalSpawnCount = 1;
+        //_totalSpawnCount = Random.Range(10, 21);
+        _totalSpawnCount = 1;
         Debug.Log($"{_monsterPool.name} 꾸러미가 선택되었습니다!");
 
         for (int i = 0; i < _totalSpawnCount; i++)

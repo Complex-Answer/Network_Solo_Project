@@ -32,7 +32,7 @@ public class PlayerDash : MonoBehaviour
 
     public void OnDash()
     {
-        if (_canDash)
+        if (_canDash || _player.IsDead)
         {
             return;
         }

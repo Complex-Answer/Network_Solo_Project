@@ -68,21 +68,20 @@ public class NodeEvent : MonoBehaviour, IPointerClickHandler
             return;
         }
        
-        //if (!PhotonNetwork.IsMasterClient) return;
-        //MapManager._instance.CurrentRow = _row;
-        //MapManager._instance.CurrentCol = _col;
+        ////if (!PhotonNetwork.IsMasterClient) return;
+        ////MapManager._instance.CurrentRow = _row;
+        ////MapManager._instance.CurrentCol = _col;
+        //Debug.Log($"노드 클릭: {_nodeData._nodeName} at ({_row}, {_col})");
 
+        //SetCurrentNode();
+        //Debug.Log($"{gameObject.name}의 프레임 활성화 상태: {_frame.activeSelf}");
 
-        Debug.Log($"노드 클릭: {_nodeData._nodeName} at ({_row}, {_col})");
-
-        SetCurrentNode();
-        Debug.Log($"{gameObject.name}의 프레임 활성화 상태: {_frame.activeSelf}");
-
-        GetComponent<Image>().sprite = _nodeData._nodeSprite;
-        if (_nodeData != null)
-        {
-            MapManager._instance.ExecuteEvent(_nodeData,this);
-        }
+        //GetComponent<Image>().sprite = _nodeData._nodeSprite;
+        //if (_nodeData != null)
+        //{
+        //    MapManager._instance.ExecuteEvent(_nodeData,this);
+        //}
+        MapManager._instance.photonView.RPC("RPC_ExecuteEventRequest", RpcTarget.MasterClient, _row, _col, _nodeData._sceneName);
     }
     public void SelectableNode(bool select)
     {

@@ -16313,6 +16313,9 @@ MonoBehaviour:
   - Type: 9
     SynchronizeType: 1
     Name: OnDash
+  - Type: 4
+    SynchronizeType: 1
+    Name: Die
   m_SynchronizeLayers:
   - SynchronizeType: 1
     LayerIndex: 0

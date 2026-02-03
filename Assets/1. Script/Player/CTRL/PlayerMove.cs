@@ -20,6 +20,8 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (_player.IsDead) return;
+
         if (!_player.PlayerDash.IsDash)
         {
             _player.Rb.linearVelocity = new Vector3(_move.x * _player.MoveSpeed, 0, _move.y * _player.MoveSpeed);

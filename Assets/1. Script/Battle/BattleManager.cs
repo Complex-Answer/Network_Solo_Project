@@ -13,12 +13,14 @@ public class BattleManager : MonoBehaviourPunCallbacks
     [SerializeField] Transform _playerSpawnPoint;
     [SerializeField] SetStat _statUI;
 
-    private List<Transform> _playerList = new();
+    private List<PlayerManager> _playerList = new();
     private List<BasicMonster> _aliveMonsters = new();
+
+    private bool _isPlayerSpawned = false;
 
     public bool IsBattle { get; private set; } = false;
     public bool IsSpawning { get; set; } = false;
-    public List<Transform> PlayerList { get { return _playerList; } }
+    public List<PlayerManager> PlayerList { get { return _playerList; } }
     private void Awake()
     {
         _instance = this;
@@ -41,14 +43,25 @@ public class BattleManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        SpawnMyPlayer();
+        Invoke(nameof(SpawnMyPlayer),0.1f);
         if (MapManager._instance != null)
         {
             MapManager._instance.CanMove = false;
         }
+        StartBattleLogic();
+    }
+    void StartBattleLogic()
+    {
+        IsBattle = true;
     }
     private void SpawnMyPlayer()
     {
+        Debug.Log($"[소환체크] 내 번호: {PhotonNetwork.LocalPlayer.ActorNumber}, 생존상태: {GameManager._instance.IsAlive(PhotonNetwork.LocalPlayer.ActorNumber)}");
+        if (!GameManager._instance.IsAlive(PhotonNetwork.LocalPlayer.ActorNumber))
+        {
+            Debug.Log("<color=red>[배틀] 사망 상태이므로 소환되지 않습니다.</color>");
+            return;
+        }
         if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("PlayerNum", out var val))
         {
             int myNumber = (int)val;
@@ -61,6 +74,8 @@ public class BattleManager : MonoBehaviourPunCallbacks
             PhotonNetwork.Instantiate(prefabName, spawnPos, _playerSpawnPoint.rotation);
 
             Debug.Log($"[배틀] {myNumber}번 플레이어가 기준점으로부터 {offsetIndex * 2f}m 떨어진 곳에 소환됨.");
+            _isPlayerSpawned = true;
+            Debug.Log("<color=cyan>[배틀] 플레이어 본인 소환 완료. 이제부터 게임 종료 판정이 가능합니다.</color>");
         }
     }
     public void RegisterMonster(BasicMonster monster)
@@ -85,7 +100,7 @@ public class BattleManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void RegisterPlayer(Transform player)
+    public void RegisterPlayer(PlayerManager player)
     {
         if (!PlayerList.Contains(player))
         {
@@ -94,36 +109,38 @@ public class BattleManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void RemovePlayer(Transform player)
+    public void RemovePlayer(PlayerManager player)
     {
         if (PlayerList.Contains(player))
         {
             PlayerList.Remove(player);
         }
 
-        _playerList.RemoveAll(p => p == null);
+        // IsBattle이 true일 때(실제 전투 중일 때)만 인원수를 체크함
+        if (PhotonNetwork.IsMasterClient && IsBattle && _isPlayerSpawned)
+        {
+            if (PlayerList.Count <= 0)
+            {
+                GameManager._instance.photonView.RPC("RPC_EndBattleAll", RpcTarget.All, false);
+            }
+        }
     }
 
     public void WinBattle()
     {
+        if (!PhotonNetwork.IsMasterClient) return;
 
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            return;
-        }
-        if (IsBattle)
-        {
-            return;
-        }
-        IsBattle = true;
-        Debug.Log("이김");
+        if (!IsBattle) return;
+
+        IsBattle = false; 
+        Debug.Log("승리! 포탈 생성 프로세스 시작");
         photonView.RPC(nameof(RPC_BattleEnd), RpcTarget.All);
     }
 
     [PunRPC]
     private void RPC_BattleEnd()
     {
-        IsBattle = true;
+        IsBattle = false;
         Debug.Log("전투 이김, 포탈 등장");
 
         ShowStatUpUI();
@@ -144,5 +161,6 @@ public class BattleManager : MonoBehaviourPunCallbacks
     {
         _statUI.Open();
     }
+
 
 }

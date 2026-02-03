@@ -18,5 +18,4 @@ MonoBehaviour:
   _attackSpeed: 0.5
   _moveSpeed: 3
   _enemyModelPrefab: {fileID: 5588023136953167307, guid: 1738451b5a81fa141bdb48fd43b7d3bd, type: 3}
-  _attackRange: 1
-  _gold: 40
+  _attackRange: 2

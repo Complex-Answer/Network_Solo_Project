@@ -9,8 +9,21 @@ public class Networking : MonoBehaviourPunCallbacks
     [SerializeField] Transform[] _spawn;
     void Start()
     {
-        Debug.Log("서버에 접속 중...");
-        PhotonNetwork.ConnectUsingSettings();
+        if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom)
+        {
+            if (GameManager._instance != null)
+            {
+                GameManager._instance.ResetGameStates();
+            }
+
+            Debug.Log("기존 방 유지 중... 플레이어 재배치");
+            SpawnPlayer(); // 바로 캐릭터 생성
+        }
+        else // 아예 처음 게임을 켰을 때
+        {
+            Debug.Log("서버에 접속 중...");
+            PhotonNetwork.ConnectUsingSettings();
+        }
     }
     public override void OnConnectedToMaster()
     {
@@ -20,15 +33,19 @@ public class Networking : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("로비 접속 완료!");
-        PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions { MaxPlayers = 4}, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom("TestRoom", new RoomOptions { MaxPlayers = 4 }, TypedLobby.Default);
     }
     public override void OnJoinedRoom()
     {
         Debug.Log("방 접속 완료! 플레이어 생성 중...");
+        SpawnPlayer();
 
+    }
+    public void SpawnPlayer()
+    {
         //들어온 유저의 번호를 저장하는 리스트
         List<int> usedNumbers = new();
-        
+
         foreach (var p in PhotonNetwork.PlayerListOthers)
         {
             //CustomProperties는 딕셔너리로 PlayerNum을 저장, val로 반환
@@ -53,18 +70,26 @@ public class Networking : MonoBehaviourPunCallbacks
         {
             myNumber = 1;
         }
-        //위에서 번호 찾은걸 PlayerNum에다가 저장 처음은 무조건 1이겠지?
-        ExitGames.Client.Photon.Hashtable props = new()
-        {
-            { "PlayerNum", myNumber }
-        };
-        //위에서 쓴걸 이제 저장시키는거지
-        PhotonNetwork.LocalPlayer.SetCustomProperties(props);
 
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("PlayerNum", out var existingNum))
+        {
+            myNumber = (int)existingNum;
+            Debug.Log($"기존 번호 사용: {myNumber}");
+        }
+        else
+        {
+            //위에서 번호 찾은걸 PlayerNum에다가 저장 처음은 무조건 1이겠지?
+            ExitGames.Client.Photon.Hashtable props = new()
+            {
+                { "PlayerNum", myNumber }
+            };
+            //위에서 쓴걸 이제 저장시키는거지
+            PhotonNetwork.LocalPlayer.SetCustomProperties(props);
+        }
         string prefabName = $"Player {myNumber:D2}";
         int spawnIndex = myNumber - 1;
 
-        if(spawnIndex < _spawn.Length)
+        if (spawnIndex < _spawn.Length)
         {
             PhotonNetwork.Instantiate(prefabName, _spawn[spawnIndex].position, _spawn[spawnIndex].rotation);
         }
@@ -72,5 +97,5 @@ public class Networking : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity);
         }
-    }//까먹지 말라고 주석 다쳐놨다...
+    }
 }

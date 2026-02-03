@@ -75,11 +75,11 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
         Transform tempTarget = null;
         Vector3 myPos = transform.position; //몹 위치
 
-        foreach (Transform p in players)
+        foreach (PlayerManager p in players)
         {
-            if (p == null) continue;
+            if (p == null || p.IsDead) continue;
 
-            float distance = (p.position - myPos).sqrMagnitude;
+            float distance = (p.transform.position - myPos).sqrMagnitude;
             if (distance < minDistance)
             {
                 minDistance = distance;
@@ -119,7 +119,7 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     }
     public void OnMobDamaged(float damage)
     {
-        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damage);
+        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.MasterClient, damage);
     }
     [PunRPC]
     private void RPC_TakeDamage(float damage)
@@ -145,9 +145,28 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     {
         if (PhotonNetwork.IsMasterClient && !_isDead)
         {
-            _isDead = true;
-            if (_animator != null) _animator.SetTrigger("Die");
+            // RPC를 통해 모든 사람의 화면에서 'Die' 트리거 실행
+            photonView.RPC(nameof(RPC_MonsterDie), RpcTarget.All);
         }
+    }
+    [PunRPC]
+    private void RPC_MonsterDie()
+    {
+        if (_isDead) return; // 중복 실행 방지
+        _isDead = true;
+
+        if (_animator != null) _animator.SetTrigger("Die");
+
+        if (_agent != null && _agent.isOnNavMesh) // 길 위에 있을 때만 실행
+        {
+            _agent.isStopped = true;
+            _agent.ResetPath();
+        }
+            _agent.enabled = false;
+
+        // 사망 시 물리 및 AI 정지
+        _collider.enabled = false;
+        _rb.isKinematic = true;
     }
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {

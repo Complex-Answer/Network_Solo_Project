@@ -57,8 +57,6 @@ public class MapGrid : MonoBehaviourPun
     private void Start()
     {
         _manager = MapManager._instance;
-
-       
         if (_manager == null)
         {
             Debug.LogError("맵 매니저를 찾을 수 없습니다");
@@ -69,14 +67,22 @@ public class MapGrid : MonoBehaviourPun
         {
             _nodeConnection = _manager.SavedMapData;
             DrawNode();
-            UpdateMapVisuals();
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                photonView.RPC("RPC_RequestMapState", RpcTarget.MasterClient);
+            }
+            else
+            {
+                // 방장은 이미 자기 데이터를 알고 있으니 바로 그립니다.
+                UpdateMapVisuals();
+            }
         }
         else
         {
             if (PhotonNetwork.IsMasterClient)
             {
                 int newSeed = Random.Range(0, 1000000);
-                photonView.RPC("RPC_SyncSeed", RpcTarget.AllBuffered, newSeed);
+                photonView.RPC("RPC_SyncSeed", RpcTarget.All, newSeed);
             }
         }
     }
@@ -99,6 +105,25 @@ public class MapGrid : MonoBehaviourPun
         _manager.SavedMapData = _nodeConnection;
     }
     [PunRPC]
+    public void RPC_RequestMapState()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            // 방장의 매니저에 들어있는 '진짜' 위치 정보를 모두에게 쏴줍니다.
+            photonView.RPC("RPC_ForceUpdateMapState", RpcTarget.All, _manager.CurrentRow, _manager.CurrentCol);
+        }
+    }
+
+    [PunRPC]
+    public void RPC_ForceUpdateMapState(int row, int col)
+    {
+        _manager.CurrentRow = row;
+        _manager.CurrentCol = col;
+
+        // 데이터가 갱신됐으니 이제 비주얼을 다시 그립니다.
+        UpdateMapVisuals();
+    }
+    [PunRPC]
     public void RPC_SyncSeed(int seed)
     {
         if (_nodeConnection != null) return; // 이미 생성됐다면 무시
@@ -107,12 +132,14 @@ public class MapGrid : MonoBehaviourPun
 
         _mapSeed = seed;
 
+        foreach (Transform child in _rectTransform) { Destroy(child.gameObject); }
         Random.InitState(seed);
+
         GridNode();
 
-        UpdateMapVisuals();
 
         _manager.SavedMapData = _nodeConnection;
+        UpdateMapVisuals();
     }
 
     private void UpdateMapVisuals()
@@ -248,35 +275,76 @@ public class MapGrid : MonoBehaviourPun
             {
                 foreach (var nextData in currentNode.NextStairs)
                 {
-                    if (_nodeEvents.TryGetValue(nextData, out NodeEvent nextUI))
+                    // 여기서 중요: 객체 참조가 다를 수 있으므로 좌표로 다시 찾아서 활성화
+                    foreach (var ev in _nodeEvents)
                     {
-                        nextUI.SelectableNode(true);
+                        if (ev.Key.Row == nextData.Row && ev.Key.Col == nextData.Col)
+                        {
+                            ev.Value.SelectableNode(true);
+                        }
                     }
                 }
             }
         }
     }
+    //private void RestoreMapVisuals()
+    //{
+    //    foreach (var nodeEnter in _nodeEvents)
+    //    {
+    //        Vector2 nodeCoord = new(nodeEnter.Key.Row, nodeEnter.Key.Col);
+    //        //현재 서 있는 곳 테두리 켜기
+    //        if (nodeEnter.Key.Row == _manager.CurrentRow && nodeEnter.Key.Col == _manager.CurrentCol)
+    //        {
+    //            nodeEnter.Value.SetCurrentNode();
+    //        }
+    //        //이미 방문한 곳 색칠하기
+    //        else if (_manager.VisitedNodes.Contains(nodeCoord))
+    //        {
+    //            nodeEnter.Value.SetVisitedNode();
+    //        }
+    //        //어짜피 테두리는 없지만 혹시나 싶으니까
+    //        else
+    //        {
+    //            nodeEnter.Value.HideFrame();
+    //        }
+    //    }
+    //}
     private void RestoreMapVisuals()
     {
         foreach (var nodeEnter in _nodeEvents)
         {
-            Vector2 nodeCoord = new(nodeEnter.Key.Row, nodeEnter.Key.Col);
-            //현재 서 있는 곳 테두리 켜기
-            if (nodeEnter.Key.Row == _manager.CurrentRow && nodeEnter.Key.Col == _manager.CurrentCol)
+            int r = nodeEnter.Key.Row;
+            int c = nodeEnter.Key.Col;
+            NodeEvent ui = nodeEnter.Value;
+
+            // 1. 현재 위치 체크 (발바닥)
+            if (r == _manager.CurrentRow && c == _manager.CurrentCol)
             {
-                nodeEnter.Value.SetCurrentNode();
+                Debug.Log($"[MapGrid] 현재 위치 표시 중: {r}, {c}");
+                ui.SetCurrentNode();
             }
-            //이미 방문한 곳 색칠하기
-            else if (_manager.VisitedNodes.Contains(nodeCoord))
+            // 2. 방문 기록 체크 (리스트를 뒤져서 좌표가 같은게 있는지 확인)
+            else if (IsVisited(r, c))
             {
-                nodeEnter.Value.SetVisitedNode();
+                ui.SetVisitedNode();
             }
-            //어짜피 테두리는 없지만 혹시나 싶으니까
             else
             {
-                nodeEnter.Value.HideFrame();
+                ui.HideFrame();
             }
         }
+    }
+
+    // Vector2.Contains 대신 직접 비교하는 헬퍼 함수
+    private bool IsVisited(int r, int c)
+    {
+        foreach (Vector2 v in _manager.VisitedNodes)
+        {
+            // 정수값이 일치하는지 확인 (오차 방지)
+            if (Mathf.Approximately(v.x, r) && Mathf.Approximately(v.y, c))
+                return true;
+        }
+        return false;
     }
     private NodeDataSO RandomNode(int row)
     {
