@@ -1,3 +1,5 @@
+using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,7 +26,7 @@ public class NodeData
     public NodeDataSO NodeType { get; set; }
     public bool HasPosition => Position != Vector2.zero;
 }
-public class MapGrid : MonoBehaviour
+public class MapGrid : MonoBehaviourPun
 {
     MyPlayerInput _inputActions;
 
@@ -38,6 +40,7 @@ public class MapGrid : MonoBehaviour
     [SerializeField] int _row = 15;
     [SerializeField] int _col = 20;
     [SerializeField] float errorValue = 0.3f; //맵 오차 값
+    int _mapSeed;
 
     private MapManager _manager;
 
@@ -54,26 +57,74 @@ public class MapGrid : MonoBehaviour
     private void Start()
     {
         _manager = MapManager._instance;
+
+       
         if (_manager == null)
         {
             Debug.LogError("맵 매니저를 찾을 수 없습니다");
             return;
         }
 
-        if (_manager.SavedMapData != null) //만약 매니저에 데이터가 남아있으면
+        if (_manager.SavedMapData != null)
         {
             _nodeConnection = _manager.SavedMapData;
-            DrawNode(); //원래 있던 데이터로 그리기
+            DrawNode();
+            UpdateMapVisuals();
         }
         else
         {
-            GridNode(); //완전 새로 만들기
-            _manager.SavedMapData = _nodeConnection; //만든 구조 매니저에 저장
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int newSeed = Random.Range(0, 1000000);
+                photonView.RPC("RPC_SyncSeed", RpcTarget.AllBuffered, newSeed);
+            }
         }
-        _drawLine.DrawLine(_rectTransform, _nodeConnection);
-        RestoreMapVisuals();
-        RefreshMapUI();
     }
+    public void CreateMapWithSeed(int seed)
+    {
+        if (_nodeConnection != null) return;
+
+        _mapSeed = seed;
+        Random.InitState(seed);
+
+        GridNode();
+
+        if (_nodeConnection != null && _drawLine != null)
+        {
+            _drawLine.DrawLine(_rectTransform, _nodeConnection);
+            RestoreMapVisuals();
+            RefreshMapUI();
+        }
+
+        _manager.SavedMapData = _nodeConnection;
+    }
+    [PunRPC]
+    public void RPC_SyncSeed(int seed)
+    {
+        if (_nodeConnection != null) return; // 이미 생성됐다면 무시
+
+        Debug.Log($"[MapGrid] 직접 수신된 시드: {seed}");
+
+        _mapSeed = seed;
+
+        Random.InitState(seed);
+        GridNode();
+
+        UpdateMapVisuals();
+
+        _manager.SavedMapData = _nodeConnection;
+    }
+
+    private void UpdateMapVisuals()
+    {
+        if (_nodeConnection != null && _drawLine != null)
+        {
+            _drawLine.DrawLine(_rectTransform, _nodeConnection);
+            RestoreMapVisuals();
+            RefreshMapUI();
+        }
+    }
+
     private void GridNode()
     {
         //맵 만들 때 기존과 겹치치 않게 싹 지워버리기

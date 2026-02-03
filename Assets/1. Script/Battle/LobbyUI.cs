@@ -3,6 +3,10 @@ using UnityEngine;
 
 public class LobbyUI : MonoBehaviourPun
 {
+    private void Start()
+    {
+        PhotonNetwork.AutomaticallySyncScene = true;
+    }
     public void OnStartButtonClick()
     {
         if (PhotonNetwork.IsMasterClient)

@@ -27,9 +27,9 @@ public class BasicMonster : MonoBehaviourPunCallbacks, IPunObservable, IMobDamag
     public NavMeshAgent Agent { get { return _agent; } }
     public Collider MobCollider => _collider;
     public Rigidbody Rigidbody => _rb;
-
     public float AttackSpeed => _mobData._attackSpeed;
     public float AttackDamage => _mobData._attackDamage;
+        
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();

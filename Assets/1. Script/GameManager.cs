@@ -16,7 +16,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float _moveSpeed = 5;
     [SerializeField] private float _attack = 5;
     [SerializeField] private float _attackSpeed = 4;
-    [SerializeField] private int _gold = 99;
+    //[SerializeField] private int _
+    //
+    //= 99;
 
     [Header("캐릭터 외형 및 투사체 설정")]
     public List<PlayerSO> characterSkins = new ();
@@ -25,7 +27,12 @@ public class GameManager : MonoBehaviour
     public float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
     public float Attack => _attack;
     public float AttackSpeed => _attackSpeed;
-    public int Gold { get { return _gold; } set { _gold = value; } }
+    //public int
+    //
+    //{ get { return _
+    //
+    //
+    //; } set { _gold = value; } }
 
     private bool _isEndBattle = false;
     private void Awake()
@@ -42,10 +49,9 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void SavePlayerStats(float hp, int gold)
+    public void SavePlayerStats(float hp)
     {
         _currentHp = hp;
-        _gold = gold;
     }
    
     public void EndBattle(bool playerWon)
@@ -67,7 +73,7 @@ public class GameManager : MonoBehaviour
         else
         {
             yield return new WaitForSeconds(2f);
-            SceneManager.LoadScene("GameOverScene");
+            //SceneManager.LoadScene("GameOverScene");
         }
     }
     public void UpgradeStats(string statType, float amount)

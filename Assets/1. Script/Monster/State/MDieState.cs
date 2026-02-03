@@ -17,6 +17,16 @@ public class MDieState : IMState
             return;
         }
         _dieTimer = Time.time;
+        if (PhotonNetwork.LocalPlayer.TagObject != null)
+        {
+            var myPlayer = PhotonNetwork.LocalPlayer.TagObject as PlayerManager;
+            //if (myPlayer != null && myPlayer.photonView.IsMine)
+            //{
+            //    myPlayer.Add
+            //
+            //    (_mob.Gold);
+            //}
+        }
 
         if (_mob.Agent != null)
         {

@@ -8,7 +8,7 @@ using Photon.Pun;
 /// 맵 관리 매니저입니다
 /// 맵의 노드들을 관리하고, 플레이어의 이동과 이벤트 실행을 담당합니다.
 /// </summary>
-public class MapManager : MonoBehaviour
+public class MapManager : MonoBehaviourPunCallbacks
 {
     #region 필드
     
@@ -17,7 +17,6 @@ public class MapManager : MonoBehaviour
 
     private int _currentRow = -1; //-1은 시작 하지않은 위치
     private int _currentCol = -1;
-
     public int CurrentRow { get { return _currentRow; } set { _currentRow = value; } } 
     public int CurrentCol { get { return _currentCol; } set { _currentCol = value; } }
     public bool CanMove { get; set; } = true; //전투인지 확인하는 불 값 프로퍼티
@@ -65,5 +64,4 @@ public class MapManager : MonoBehaviour
             Debug.LogWarning($"[맵매니저] 노드 이벤트 실행: {data._nodeName}, 씬 이름이 비어있습니다.");
         }
     }
-
 }

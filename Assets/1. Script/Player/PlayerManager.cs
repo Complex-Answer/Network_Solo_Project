@@ -8,11 +8,11 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class PlayerManager : MonoBehaviourPun
 {
-
+    static public PlayerManager _instance;
     //이 밑에 있는 값들은 나중에 게임 매니저에서 가져올 것들
     [Header("플레이어 스탯")]
     private float _hp;
-    private int _gold;
+    //private int _gold;
 
     [Header("컴포넌트")]
     Rigidbody _rb;
@@ -36,7 +36,7 @@ public class PlayerManager : MonoBehaviourPun
     public float MoveSpeed { get; private set; }
     public float Attack { get; private set; }
     public float AttackSpeed { get; private set; }
-    public int Gold => _gold;
+    //public int Gold => _gold;
     public PlayerMove PlayerMove => _playerMove;
     public PlayerAttack PlayerAttack => _playerAttack;
     public PlayerDash PlayerDash => _playerDash;
@@ -44,6 +44,8 @@ public class PlayerManager : MonoBehaviourPun
     public Animator Animator => _animator;
 
     public event Action<float, float> OnHpChanged;
+    //public event Action<int> OnGoldChanged;
+
     private void Awake()
     {
         _playerMove = GetComponent<PlayerMove>();
@@ -60,8 +62,10 @@ public class PlayerManager : MonoBehaviourPun
     }
     void Start()
     {
+       
         if (photonView.IsMine)
         {
+            _instance = this;
             LoadStatsFromManager();
         }
         else
@@ -89,7 +93,6 @@ public class PlayerManager : MonoBehaviourPun
             return;
         }
         _hp = gm.Hp;
-        _gold = gm.Gold;
         MaxHp = gm.MaxHp;
         MoveSpeed = gm.MoveSpeed;
         Attack = gm.Attack;
@@ -104,12 +107,11 @@ public class PlayerManager : MonoBehaviourPun
         {
             return;
         }
-        GameManager._instance.SavePlayerStats(_hp, _gold);
+        GameManager._instance.SavePlayerStats(_hp);
     }
     public void TakeDamage(float damaged)
     {
-        ProcessDamage(damaged);
-        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.Others, damaged);
+        photonView.RPC(nameof(RPC_TakeDamage), RpcTarget.All, damaged);
     }
     [PunRPC]
     private void RPC_TakeDamage(float damaged)
@@ -134,7 +136,28 @@ public class PlayerManager : MonoBehaviourPun
             }
         }
     }
+    //public void Add
+    //
+    //
+    //(int amount)
+    //{
+    //    if (!photonView.IsMine) return; 
 
+    //    _
+    //
+    //    += amount;
+    //    On
+    //
+    //
+    //    Changed?.Invoke(_gold);
+    //}
+    public void RestoreHp(float amount)
+    {
+        _hp += amount;
+        _hp = Mathf.Clamp(_hp, 0, MaxHp);
+
+        OnHpChanged?.Invoke(_hp, MaxHp);
+    }
     void Update()
     {
         if (photonView != null && !photonView.IsMine) return;
@@ -176,6 +199,10 @@ public class PlayerManager : MonoBehaviourPun
         if (BattleManager._instance != null)
         {
             BattleManager._instance.RemovePlayer(this.transform);
+        }
+        if (photonView.IsMine && _instance == this)
+        {
+            _instance = null;
         }
     }
 }

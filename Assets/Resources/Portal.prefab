@@ -426,7 +426,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Portal
   _mapSceneName: Floor
-  _moveUI: {fileID: 2368261530862579661}
 --- !u!135 &1892068930184177266
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -15,7 +15,6 @@ MonoBehaviour:
   _nodeType:
   - {fileID: 11400000, guid: 08c393f2644183846ad8eb80267192eb, type: 2}
   - {fileID: 11400000, guid: e507074dd00d8674e97c1c9b651ebda0, type: 2}
-  - {fileID: 11400000, guid: 7b150d61cde52904d8e3f3a2ea2cc2cc, type: 2}
   - {fileID: 11400000, guid: c484b3f8018f6e84291045522c875bc3, type: 2}
   _bossNode: {fileID: 11400000, guid: 9337465b4619b9a4fb938a24382cdb4e, type: 2}
   _startMobNode: {fileID: 11400000, guid: 08c393f2644183846ad8eb80267192eb, type: 2}

@@ -11,4 +11,5 @@ public class MonsterSO : ScriptableObject
     public float _moveSpeed;
     public GameObject _enemyModelPrefab; 
     public float _attackRange;
+    //public int _gold;
 }
