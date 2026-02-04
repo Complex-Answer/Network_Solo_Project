@@ -73,7 +73,6 @@ public class MapGrid : MonoBehaviourPun
             }
             else
             {
-                // 방장은 이미 자기 데이터를 알고 있으니 바로 그립니다.
                 UpdateMapVisuals();
             }
         }
@@ -109,7 +108,6 @@ public class MapGrid : MonoBehaviourPun
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            // 방장의 매니저에 들어있는 '진짜' 위치 정보를 모두에게 쏴줍니다.
             photonView.RPC("RPC_ForceUpdateMapState", RpcTarget.All, _manager.CurrentRow, _manager.CurrentCol);
         }
     }
@@ -119,8 +117,7 @@ public class MapGrid : MonoBehaviourPun
     {
         _manager.CurrentRow = row;
         _manager.CurrentCol = col;
-
-        // 데이터가 갱신됐으니 이제 비주얼을 다시 그립니다.
+      
         UpdateMapVisuals();
     }
     [PunRPC]
@@ -213,7 +210,6 @@ public class MapGrid : MonoBehaviourPun
                 NodeDataSO selectedNode = nodeData.NodeType;
                 if (_mapNode == null)
                 {
-                    Debug.LogError($"[오류] {node.name} 프리팹에 'NodeEvent' 스크립트가 없습니다!");
                     continue;
                 }
                 if (_mapNode != null)
@@ -287,28 +283,6 @@ public class MapGrid : MonoBehaviourPun
             }
         }
     }
-    //private void RestoreMapVisuals()
-    //{
-    //    foreach (var nodeEnter in _nodeEvents)
-    //    {
-    //        Vector2 nodeCoord = new(nodeEnter.Key.Row, nodeEnter.Key.Col);
-    //        //현재 서 있는 곳 테두리 켜기
-    //        if (nodeEnter.Key.Row == _manager.CurrentRow && nodeEnter.Key.Col == _manager.CurrentCol)
-    //        {
-    //            nodeEnter.Value.SetCurrentNode();
-    //        }
-    //        //이미 방문한 곳 색칠하기
-    //        else if (_manager.VisitedNodes.Contains(nodeCoord))
-    //        {
-    //            nodeEnter.Value.SetVisitedNode();
-    //        }
-    //        //어짜피 테두리는 없지만 혹시나 싶으니까
-    //        else
-    //        {
-    //            nodeEnter.Value.HideFrame();
-    //        }
-    //    }
-    //}
     private void RestoreMapVisuals()
     {
         foreach (var nodeEnter in _nodeEvents)
@@ -317,13 +291,13 @@ public class MapGrid : MonoBehaviourPun
             int c = nodeEnter.Key.Col;
             NodeEvent ui = nodeEnter.Value;
 
-            // 1. 현재 위치 체크 (발바닥)
+            // 현재 위치 체크 
             if (r == _manager.CurrentRow && c == _manager.CurrentCol)
             {
                 Debug.Log($"[MapGrid] 현재 위치 표시 중: {r}, {c}");
                 ui.SetCurrentNode();
             }
-            // 2. 방문 기록 체크 (리스트를 뒤져서 좌표가 같은게 있는지 확인)
+            // 방문 기록 체크
             else if (IsVisited(r, c))
             {
                 ui.SetVisitedNode();
@@ -335,7 +309,6 @@ public class MapGrid : MonoBehaviourPun
         }
     }
 
-    // Vector2.Contains 대신 직접 비교하는 헬퍼 함수
     private bool IsVisited(int r, int c)
     {
         foreach (Vector2 v in _manager.VisitedNodes)
@@ -409,6 +382,4 @@ public class MapGrid : MonoBehaviourPun
             return _mapData._startMobNode;
         }
     }
-   
-    
 }
